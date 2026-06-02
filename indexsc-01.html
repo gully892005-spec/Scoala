@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🌟 Școala Distractivă</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0e17;
+  --card: #1a1830;
+  --card2: #231f3a;
+  --border: rgba(255,255,255,0.08);
+  --math: #ff6b6b;
+  --math2: #ff8e53;
+  --eng: #43e97b;
+  --eng2: #38f9d7;
+  --gold: #ffd700;
+  --purple: #a78bfa;
+  --blue: #60a5fa;
+  --text: #f0eeff;
+  --muted: rgba(240,238,255,0.5);
+  --ok: #43e97b;
+  --err: #ff6b6b;
+  --r: 18px;
+  --sh: 0 8px 32px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Stars background */
+.stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(167,139,250,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(67,233,123,0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 60% 80%, rgba(255,107,107,0.06) 0%, transparent 50%);
+}
+.star-dot {
+  position: absolute; border-radius: 50%; background: #fff;
+  animation: twinkle ease-in-out infinite;
+}
+@keyframes twinkle { 0%,100%{opacity:.15;transform:scale(1)} 50%{opacity:.8;transform:scale(1.4)} }
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(15,14,23,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap; gap: 8px;
+}
+.logo {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.3rem; font-weight: 700;
+  background: linear-gradient(90deg, var(--math), var(--eng));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.class-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+.cls-pill {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .82rem; font-weight: 600;
+  padding: 4px 12px; border: 1.5px solid var(--border);
+  border-radius: 999px; cursor: pointer;
+  background: transparent; color: var(--muted);
+  transition: all .2s;
+}
+.cls-pill:hover { border-color: var(--purple); color: var(--text); }
+.cls-pill.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+.score-row { display: flex; gap: 10px; }
+.score-badge {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .82rem; font-weight: 600;
+  padding: 4px 12px; border-radius: 999px;
+  display: flex; align-items: center; gap: 5px;
+}
+.score-badge.sm { background: rgba(255,107,107,.15); border: 1.5px solid rgba(255,107,107,.3); color: var(--math); }
+.score-badge.se { background: rgba(67,233,123,.12); border: 1.5px solid rgba(67,233,123,.25); color: var(--eng); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; justify-content: center; gap: 8px;
+  padding: 16px 14px 0;
+  position: relative; z-index: 10;
+}
+.tab-btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  padding: 10px 32px; border: none;
+  border-radius: var(--r); cursor: pointer;
+  background: var(--card); color: var(--muted);
+  border: 1.5px solid var(--border);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.tab-btn:hover { transform: translateY(-2px); color: var(--text); }
+.tab-btn.tab-math.active { background: linear-gradient(135deg, var(--math), var(--math2)); color: #fff; border-color: transparent; box-shadow: 0 6px 24px rgba(255,107,107,.4); transform: translateY(-3px); }
+.tab-btn.tab-eng.active { background: linear-gradient(135deg, var(--eng), var(--eng2)); color: #0f0e17; border-color: transparent; box-shadow: 0 6px 24px rgba(67,233,123,.35); transform: translateY(-3px); }
+
+/* ── MAIN ── */
+main {
+  position: relative; z-index: 5;
+  max-width: 700px; margin: 0 auto;
+  padding: 20px 14px 80px;
+}
+.section { display: none; animation: fadeUp .35s ease both; }
+.section.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--sh);
+}
+.card-title {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.15rem; font-weight: 600;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text);
+}
+
+/* ── MODE PILLS ── */
+.mode-row { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
+.mpill {
+  font-family: 'Nunito', sans-serif;
+  font-size: .78rem; font-weight: 800;
+  padding: 6px 14px; border-radius: 999px;
+  border: 1.5px solid var(--border); cursor: pointer;
+  background: transparent; color: var(--muted);
+  transition: all .2s;
+}
+.mpill:hover { color: var(--text); border-color: rgba(255,255,255,.2); }
+.mpill.am { background: rgba(255,107,107,.15); border-color: var(--math); color: var(--math); }
+.mpill.ae { background: rgba(67,233,123,.12); border-color: var(--eng); color: var(--eng); }
+
+/* ── DIFF PILLS ── */
+.diff-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; }
+.dpill {
+  font-size: .72rem; font-weight: 800;
+  padding: 4px 12px; border-radius: 999px;
+  border: 1.5px solid var(--border); cursor: pointer;
+  background: transparent; color: var(--muted); transition: all .2s;
+}
+.dpill.dm { background: rgba(255,107,107,.15); border-color: var(--math); color: var(--math); }
+.dpill.de { background: rgba(67,233,123,.12); border-color: var(--eng); color: var(--eng); }
+
+/* ── BIG PROBLEM TEXT ── */
+.prob-display {
+  text-align: center; margin: 6px 0 24px;
+  min-height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+}
+.prob-text {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(1.8rem, 7vw, 3.2rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--math), var(--math2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1.15;
+}
+.prob-text.word-prob {
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  line-height: 1.55;
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  background: var(--card2);
+  border-radius: 14px;
+  padding: 14px 18px;
+  text-align: left;
+  border-left: 3px solid var(--math);
+}
+.prob-label {
+  font-size: .78rem; font-weight: 700;
+  color: var(--muted); letter-spacing: .05em; text-transform: uppercase;
+}
+
+/* ── ANSWER ── */
+.ans-row { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.ans-input {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.8rem; font-weight: 600;
+  width: 110px; height: 58px;
+  text-align: center;
+  background: var(--card2); color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 14px; outline: none;
+  transition: border-color .2s;
+}
+.ans-input:focus { border-color: var(--math); box-shadow: 0 0 0 3px rgba(255,107,107,.15); }
+.ans-input.ok { border-color: var(--ok); background: rgba(67,233,123,.08); }
+.ans-input.err { border-color: var(--err); background: rgba(255,107,107,.08); }
+.ans-input.wide { width: 180px; font-size: 1.3rem; }
+
+/* Compare buttons */
+.cmp-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 10px 0 22px; flex-wrap: wrap; }
+.cmp-num {
+  font-family: 'Fredoka', sans-serif;
+  font-size: clamp(2rem,8vw,3.2rem); font-weight: 700;
+  background: var(--card2); border-radius: 14px;
+  padding: 10px 24px; min-width: 80px; text-align: center;
+  border: 1.5px solid var(--border); color: var(--text);
+}
+.cmp-btns { display: flex; gap: 9px; }
+.cmp-btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1.7rem; font-weight: 700;
+  width: 58px; height: 58px;
+  background: var(--card2); color: var(--text);
+  border: 2px solid var(--border); border-radius: 14px;
+  cursor: pointer; transition: all .2s cubic-bezier(.34,1.56,.64,1);
+  display: flex; align-items: center; justify-content: center;
+}
+.cmp-btn:hover { transform: scale(1.14); border-color: var(--math); }
+.cmp-btn.sok { background: rgba(67,233,123,.2); border-color: var(--ok); color: var(--ok); }
+.cmp-btn.serr { background: rgba(255,107,107,.2); border-color: var(--err); color: var(--err); }
+
+/* Multiple choice */
+.mc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 16px; }
+.mc-btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem; font-weight: 700;
+  padding: 12px 10px; text-align: center;
+  background: var(--card2); color: var(--text);
+  border: 2px solid var(--border); border-radius: 14px;
+  cursor: pointer; transition: all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.mc-btn:hover { border-color: var(--math); transform: scale(1.03); }
+.mc-btn.ok { background: rgba(67,233,123,.18); border-color: var(--ok); color: var(--ok); }
+.mc-btn.err { background: rgba(255,107,107,.18); border-color: var(--err); color: var(--err); }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 1rem; font-weight: 600;
+  padding: 10px 24px; border: none;
+  border-radius: 999px; cursor: pointer;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: scale(.97); }
+.bm { background: linear-gradient(135deg, var(--math), var(--math2)); color: #fff; box-shadow: 0 4px 18px rgba(255,107,107,.35); }
+.be { background: linear-gradient(135deg, var(--eng), var(--eng2)); color: #0f0e17; box-shadow: 0 4px 18px rgba(67,233,123,.3); }
+.bs { background: var(--card2); color: var(--muted); border: 1.5px solid var(--border); }
+.bmic { background: linear-gradient(135deg, var(--purple), #7c3aed); color: #fff; box-shadow: 0 4px 18px rgba(167,139,250,.35); }
+.bmic.listening { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 4px 18px rgba(239,68,68,.35)} 50%{box-shadow:0 4px 28px rgba(239,68,68,.65)} }
+
+/* ── FEEDBACK ── */
+.feedback {
+  text-align: center; font-family: 'Fredoka', sans-serif;
+  font-size: 1.3rem; font-weight: 600;
+  min-height: 38px; margin: 12px 0;
+  transition: all .25s;
+}
+.feedback.ok { color: var(--ok); animation: pop .4s cubic-bezier(.34,1.56,.64,1); }
+.feedback.err { color: var(--err); animation: shake .4s; }
+@keyframes pop { 0%{transform:scale(.4)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+
+/* ── STARS ── */
+.stars-row { display: flex; justify-content: center; gap: 4px; flex-wrap: wrap; min-height: 30px; margin-bottom: 10px; }
+.star { font-size: 1.4rem; animation: pop .4s; }
+
+/* ── PROGRESS ── */
+.prog-wrap { margin-top: 18px; }
+.prog-head { display: flex; justify-content: space-between; font-size: .75rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.prog-bar { height: 8px; background: rgba(255,255,255,.07); border-radius: 999px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
+.pfm { background: linear-gradient(90deg, var(--math), var(--math2)); }
+.pfe { background: linear-gradient(90deg, var(--eng), var(--eng2)); }
+
+/* ── ENGLISH FLASHCARD ── */
+.flip-wrap { perspective: 1000px; width: 100%; max-width: 320px; height: 185px; margin: 0 auto 20px; cursor: pointer; }
+.flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,0,.2,1); }
+.flip-wrap.flipped .flip-inner { transform: rotateY(180deg); }
+.flip-face {
+  position: absolute; inset: 0; border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  backface-visibility: hidden; padding: 14px;
+}
+.ff-front { background: linear-gradient(135deg, #1e3a5f, #1a2f50); border: 1.5px solid rgba(96,165,250,.25); }
+.ff-back { background: linear-gradient(135deg, #1a3a2a, #162e22); border: 1.5px solid rgba(67,233,123,.2); transform: rotateY(180deg); }
+.fc-word { font-family: 'Fredoka', sans-serif; font-size: clamp(1.8rem,7vw,2.8rem); font-weight: 700; color: #fff; }
+.fc-emoji { font-size: 2.6rem; margin-bottom: 6px; }
+.fc-ro { font-size: 1rem; color: rgba(255,255,255,.65); margin-top: 4px; }
+.fc-hint { font-size: .68rem; color: rgba(255,255,255,.35); margin-top: 8px; }
+.eng-dots { display: flex; gap: 5px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+.edot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.12); transition: all .3s; }
+.edot.done { background: var(--eng); }
+.edot.cur { background: var(--purple); transform: scale(1.35); }
+
+/* ── ENG QUIZ OPTIONS ── */
+.eng-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 16px; }
+.eopt {
+  font-family: 'Nunito', sans-serif;
+  font-size: .95rem; font-weight: 700;
+  padding: 11px 8px; text-align: center;
+  background: var(--card2); color: var(--text);
+  border: 2px solid var(--border); border-radius: 14px;
+  cursor: pointer; transition: all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.eopt:hover { border-color: var(--eng); transform: scale(1.03); }
+.eopt.ok { background: rgba(67,233,123,.18); border-color: var(--ok); color: var(--ok); }
+.eopt.err { background: rgba(255,107,107,.18); border-color: var(--err); color: var(--err); }
+
+/* ── LISTEN OPTS (big emoji) ── */
+.listen-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.lopt {
+  font-size: 1rem; font-weight: 700; padding: 14px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: var(--card2); color: var(--text);
+  border: 2px solid var(--border); border-radius: 16px;
+  cursor: pointer; transition: all .2s cubic-bezier(.34,1.56,.64,1);
+}
+.lopt:hover { border-color: var(--eng); transform: scale(1.04); }
+.lopt .lem { font-size: 2.4rem; }
+.lopt .lro { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+.lopt.ok { background: rgba(67,233,123,.18); border-color: var(--ok); }
+.lopt.err { background: rgba(255,107,107,.18); border-color: var(--err); }
+
+/* ── SPEAK ── */
+.speak-target {
+  text-align: center; padding: 18px;
+  background: var(--card2); border-radius: 18px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 18px;
+}
+.speak-emoji { font-size: 3.5rem; margin-bottom: 6px; }
+.speak-word { font-family: 'Fredoka', sans-serif; font-size: 2.6rem; font-weight: 700; color: var(--eng); }
+.speak-ro { font-size: .9rem; color: var(--muted); margin-top: 3px; }
+.mic-result { text-align: center; margin: 10px 0; min-height: 48px; }
+.mic-said { font-size: 1rem; font-weight: 700; color: var(--muted); background: var(--card2); border-radius: 10px; padding: 7px 14px; display: inline-block; }
+.mic-verdict { font-family: 'Fredoka', sans-serif; font-size: 1.2rem; font-weight: 600; margin-top: 6px; }
+.mv-good { color: var(--ok); } .mv-fair { color: var(--gold); } .mv-bad { color: var(--err); }
+
+/* ── SENTENCE BUILDER ── */
+.sent-ro { font-size: 1rem; font-weight: 700; color: var(--muted); text-align: center; margin-bottom: 14px; font-style: italic; }
+.word-bank { display: flex; gap: 7px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+.wb-btn {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .95rem; font-weight: 600;
+  padding: 6px 14px; background: var(--card2);
+  border: 1.5px solid rgba(67,233,123,.3); color: var(--eng);
+  border-radius: 10px; cursor: pointer; transition: all .2s;
+}
+.wb-btn:hover { background: rgba(67,233,123,.1); transform: scale(1.04); }
+.built-area {
+  min-height: 44px; display: flex; gap: 7px; flex-wrap: wrap;
+  justify-content: center; padding: 9px;
+  background: rgba(255,255,255,.04); border: 1.5px dashed var(--border);
+  border-radius: 14px; margin-bottom: 12px;
+}
+.built-tok {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .95rem; font-weight: 600;
+  padding: 5px 13px; background: rgba(167,139,250,.15);
+  border: 1.5px solid var(--purple); color: var(--purple);
+  border-radius: 10px; cursor: pointer; transition: all .2s;
+}
+.built-tok:hover { background: rgba(255,107,107,.15); border-color: var(--err); color: var(--err); }
+
+/* ── TTS BTN ── */
+.tts-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.tts-btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: .85rem; font-weight: 700;
+  padding: 7px 16px; border-radius: 999px;
+  border: 1.5px solid rgba(96,165,250,.35); cursor: pointer;
+  background: rgba(96,165,250,.1); color: var(--blue);
+  transition: all .2s; display: flex; align-items: center; gap: 6px;
+}
+.tts-btn:hover { background: rgba(96,165,250,.2); }
+
+/* ── FRACTION DISPLAY ── */
+.frac-display {
+  display: flex; align-items: center; gap: 16px; justify-content: center;
+  margin: 10px 0 20px;
+}
+.frac-box { text-align: center; }
+.frac-num { font-family: 'Fredoka', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--math); border-bottom: 4px solid var(--math); padding-bottom: 4px; min-width: 50px; }
+.frac-den { font-family: 'Fredoka', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--math); min-width: 50px; }
+.frac-op { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; color: var(--muted); }
+.frac-q .frac-num, .frac-q .frac-den { color: var(--purple); border-color: var(--purple); }
+
+/* ── CONFETTI ── */
+.cp { position: fixed; top: -20px; border-radius: 4px; animation: cf linear forwards; pointer-events: none; z-index: 200; }
+@keyframes cf { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+/* ── BANNER ── */
+.banner {
+  font-family: 'Fredoka', sans-serif;
+  font-size: .88rem; font-weight: 600;
+  padding: 8px 16px; border-radius: 10px;
+  margin-bottom: 16px; text-align: center;
+  background: rgba(167,139,250,.1);
+  border: 1px solid rgba(167,139,250,.2);
+  color: var(--purple);
+}
+
+/* ── GEOMETRY HINT ── */
+.geo-hint {
+  background: var(--card2); border-radius: 14px;
+  padding: 14px; margin-bottom: 16px;
+  border-left: 3px solid var(--blue);
+  font-size: .9rem; color: var(--muted); line-height: 1.6;
+}
+.geo-hint strong { color: var(--blue); }
+
+@media(max-width:480px){ .eng-opts,.listen-opts,.mc-grid{grid-template-columns:1fr} .cmp-btns{gap:6px} .cmp-btn{width:50px;height:50px;font-size:1.5rem} }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">🌟 Școala Distractivă</div>
+  <div class="class-pills">
+    <button class="cls-pill active" onclick="setClass(1)" id="c1">Cls. 1</button>
+    <button class="cls-pill" onclick="setClass(2)" id="c2">Cls. 2</button>
+    <button class="cls-pill" onclick="setClass(3)" id="c3">Cls. 3</button>
+    <button class="cls-pill" onclick="setClass(4)" id="c4">Cls. 4</button>
+    <button class="cls-pill" onclick="setClass(5)" id="c5">Cls. 5</button>
+  </div>
+  <div class="score-row">
+    <div class="score-badge sm">🔢 <span id="sM">0</span></div>
+    <div class="score-badge se">🇬🇧 <span id="sE">0</span></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn tab-math active" onclick="showTab('math')">🔢 Matematică</button>
+  <button class="tab-btn tab-eng" onclick="showTab('eng')">🇬🇧 Engleză</button>
+</div>
+
+<main>
+
+<!-- ══════════════ MATEMATICĂ ══════════════ -->
+<section id="sec-math" class="section active">
+<div class="card">
+  <div class="banner" id="mathBanner">📚 Clasa 1 — Adunare și Scădere</div>
+  <div class="mode-row" id="mathModes"></div>
+  <div class="diff-row" id="mathDiffs"></div>
+
+  <!-- Basic calc -->
+  <div id="mCalc">
+    <div class="prob-display">
+      <div class="prob-label" id="calcLabel">Calculează:</div>
+      <div class="prob-text" id="calcText">?</div>
+    </div>
+    <div class="ans-row">
+      <input class="ans-input" type="number" id="calcInp" placeholder="?" onkeydown="if(event.key==='Enter')chkCalc()">
+      <button class="btn bm" onclick="chkCalc()">✅</button>
+      <button class="btn bs" onclick="newCalc()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Compare -->
+  <div id="mCmp" style="display:none">
+    <div class="cmp-row">
+      <div class="cmp-num" id="cA">?</div>
+      <div class="cmp-btns">
+        <button class="cmp-btn" id="bLt" onclick="chkCmp('lt')">&lt;</button>
+        <button class="cmp-btn" id="bEq" onclick="chkCmp('eq')">=</button>
+        <button class="cmp-btn" id="bGt" onclick="chkCmp('gt')">&gt;</button>
+      </div>
+      <div class="cmp-num" id="cB">?</div>
+    </div>
+  </div>
+
+  <!-- Fill blank -->
+  <div id="mFill" style="display:none">
+    <div class="prob-display">
+      <div class="prob-label">Găsește numărul lipsă:</div>
+      <div class="prob-text" id="fillText">?</div>
+    </div>
+    <div class="ans-row">
+      <input class="ans-input" type="number" id="fillInp" placeholder="?" onkeydown="if(event.key==='Enter')chkFill()">
+      <button class="btn bm" onclick="chkFill()">✅</button>
+      <button class="btn bs" onclick="newFill()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Multiply/Divide -->
+  <div id="mMul" style="display:none">
+    <div class="prob-display">
+      <div class="prob-label" id="mulLabel">Calculează:</div>
+      <div class="prob-text" id="mulText">?</div>
+    </div>
+    <div class="ans-row">
+      <input class="ans-input" type="number" id="mulInp" placeholder="?" onkeydown="if(event.key==='Enter')chkMul()">
+      <button class="btn bm" onclick="chkMul()">✅</button>
+      <button class="btn bs" onclick="newMul()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Fractions -->
+  <div id="mFrac" style="display:none">
+    <div class="prob-label" style="text-align:center;margin-bottom:12px" id="fracLabel">Calculează:</div>
+    <div id="fracDisp"></div>
+    <div class="ans-row" id="fracAnsRow">
+      <input class="ans-input" style="width:72px" type="number" id="fracN" placeholder="?">
+      <span style="font-size:2rem;color:var(--muted)">/</span>
+      <input class="ans-input" style="width:72px" type="number" id="fracD" placeholder="?">
+      <button class="btn bm" onclick="chkFrac()">✅</button>
+      <button class="btn bs" onclick="newFrac()">🔄</button>
+    </div>
+    <div id="fracAnsSimple" style="display:none">
+      <div class="ans-row">
+        <input class="ans-input wide" type="number" id="fracSimpleInp" placeholder="?" onkeydown="if(event.key==='Enter')chkFracSimple()">
+        <button class="btn bm" onclick="chkFracSimple()">✅</button>
+        <button class="btn bs" onclick="newFrac()">🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word problems -->
+  <div id="mWord" style="display:none">
+    <div class="prob-display" style="margin-bottom:16px">
+      <div class="prob-text word-prob" id="wordText">Se încarcă...</div>
+    </div>
+    <div class="prob-label" style="text-align:center;margin-bottom:10px">Răspuns:</div>
+    <div class="ans-row">
+      <input class="ans-input wide" type="number" id="wordInp" placeholder="?" onkeydown="if(event.key==='Enter')chkWord()">
+      <button class="btn bm" onclick="chkWord()">✅</button>
+      <button class="btn bs" onclick="newWord()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Geometry -->
+  <div id="mGeo" style="display:none">
+    <div class="geo-hint" id="geoHint"></div>
+    <div class="prob-display" style="margin-bottom:16px">
+      <div class="prob-label">Calculează:</div>
+      <div class="prob-text word-prob" id="geoText"></div>
+    </div>
+    <div class="ans-row">
+      <input class="ans-input wide" type="number" id="geoInp" placeholder="?" onkeydown="if(event.key==='Enter')chkGeo()">
+      <button class="btn bm" onclick="chkGeo()">✅</button>
+      <button class="btn bs" onclick="newGeo()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Equations -->
+  <div id="mEq" style="display:none">
+    <div class="prob-display">
+      <div class="prob-label">Rezolvă ecuația (află x):</div>
+      <div class="prob-text" id="eqText">?</div>
+    </div>
+    <div class="ans-row">
+      <span style="font-family:'Fredoka',cursive;font-size:1.4rem;color:var(--muted)">x =</span>
+      <input class="ans-input" type="number" id="eqInp" placeholder="?" onkeydown="if(event.key==='Enter')chkEq()">
+      <button class="btn bm" onclick="chkEq()">✅</button>
+      <button class="btn bs" onclick="newEq()">🔄</button>
+    </div>
+  </div>
+
+  <!-- Percentages -->
+  <div id="mPct" style="display:none">
+    <div class="prob-display">
+      <div class="prob-label">Calculează procentul:</div>
+      <div class="prob-text word-prob" id="pctText"></div>
+    </div>
+    <div class="ans-row">
+      <input class="ans-input wide" type="number" id="pctInp" placeholder="?" onkeydown="if(event.key==='Enter')chkPct()">
+      <button class="btn bm" onclick="chkPct()">✅</button>
+      <button class="btn bs" onclick="newPct()">🔄</button>
+    </div>
+  </div>
+
+  <div class="feedback" id="mathFB"></div>
+  <div class="stars-row" id="mathStars"></div>
+  <div class="prog-wrap">
+    <div class="prog-head"><span>Progres sesiune</span><span id="mathPct2">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill pfm" id="mathBar" style="width:0%"></div></div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ ENGLEZĂ ══════════════ -->
+<section id="sec-eng" class="section">
+<div class="card">
+  <div class="banner" id="engBanner">📚 Clasa 1 — Vocabular de bază</div>
+  <div class="mode-row" id="engModes"></div>
+  <div class="diff-row" id="engLevels"></div>
+
+  <!-- Learn flashcard -->
+  <div id="eLearn">
+    <div class="eng-dots" id="eDots"></div>
+    <div class="flip-wrap" id="eCard" onclick="flipCard()">
+      <div class="flip-inner" id="eCardInner">
+        <div class="flip-face ff-front">
+          <div class="fc-emoji" id="fcEm">🐱</div>
+          <div class="fc-word" id="fcW">cat</div>
+          <div class="fc-hint">👆 apasă să vezi traducerea</div>
+        </div>
+        <div class="flip-face ff-back">
+          <div class="fc-emoji" id="fcEm2">🐱</div>
+          <div class="fc-word" id="fcW2">CAT</div>
+          <div class="fc-ro" id="fcRo">pisică</div>
+        </div>
+      </div>
+    </div>
+    <div class="tts-row">
+      <button class="btn bs" onclick="prevW()">⬅️</button>
+      <button class="tts-btn" onclick="spkEng()">🔊 Pronunție</button>
+      <button class="btn bs" onclick="nextW()">➡️</button>
+    </div>
+  </div>
+
+  <!-- Listen & pick -->
+  <div id="eListen" style="display:none">
+    <div style="text-align:center;font-size:.9rem;font-weight:700;color:var(--muted);margin-bottom:14px">🔊 Ascultă și alege imaginea corectă</div>
+    <div class="tts-row" style="margin-bottom:16px">
+      <button class="btn be" onclick="playListen()" id="listenBtn">🔊 Ascultă din nou</button>
+    </div>
+    <div class="listen-opts" id="listenOpts"></div>
+  </div>
+
+  <!-- Quiz ro→en -->
+  <div id="eQuiz" style="display:none">
+    <div style="text-align:center;font-size:.9rem;font-weight:700;color:var(--muted);margin-bottom:10px">Cum se spune în engleză?</div>
+    <div style="font-family:'Fredoka',cursive;font-size:clamp(1.5rem,5.5vw,2.4rem);font-weight:700;text-align:center;color:var(--eng);margin:0 0 16px" id="qEngW"></div>
+    <div class="eng-opts" id="qOpts"></div>
+  </div>
+
+  <!-- Sentences -->
+  <div id="eSent" style="display:none">
+
+    <!-- Sub-mode switcher -->
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px">
+      <button class="mpill ae" id="sentTab1" onclick="setSentTab('arrange')">📝 Aranjează</button>
+      <button class="mpill" id="sentTab2" onclick="setSentTab('speak')">🎤 Pronunță</button>
+    </div>
+
+    <!-- Propoziția în română (shared) -->
+    <div style="background:var(--card2);border-radius:14px;padding:14px 16px;margin-bottom:14px;border-left:4px solid var(--eng)">
+      <div style="font-size:.72rem;font-weight:800;color:var(--eng);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">🇷🇴 În română:</div>
+      <div style="font-family:'Fredoka',cursive;font-size:1.2rem;font-weight:600;color:var(--text)" id="sentRO">—</div>
+    </div>
+
+    <!-- ARRANGE mode -->
+    <div id="sentArrangeMode">
+      <div style="font-size:.8rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:10px">Apasă cuvintele în ordinea corectă în engleză:</div>
+      <div class="tts-row" style="margin-bottom:12px">
+        <button class="btn be" onclick="playESent()">🔊 Ascultă propoziția</button>
+        <button class="btn bs" onclick="newESent()">🔄 Alta</button>
+      </div>
+      <div class="word-bank" id="wordBank"></div>
+      <div class="built-area" id="builtArea"></div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="btn be" onclick="chkSent()">✅ Verifică</button>
+        <button class="btn bs" onclick="clearBuilt()">🗑️</button>
+      </div>
+    </div>
+
+    <!-- SPEAK mode -->
+    <div id="sentSpeakMode" style="display:none">
+      <div style="font-size:.8rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:12px">
+        Ascultă propoziția, apoi pronunță-o tu în engleză!
+      </div>
+
+      <!-- Step indicator -->
+      <div style="display:flex;gap:0;justify-content:center;margin-bottom:18px" id="sentStepRow">
+        <div style="flex:1;text-align:center;padding:7px 4px;border-radius:10px 0 0 10px;font-size:.75rem;font-weight:800;background:rgba(67,233,123,.15);border:1.5px solid var(--eng);color:var(--eng)" id="step1Ind">① Ascultă</div>
+        <div style="flex:1;text-align:center;padding:7px 4px;border-radius:0 10px 10px 0;font-size:.75rem;font-weight:800;background:var(--card2);border:1.5px solid var(--border);color:var(--muted);border-left:none" id="step2Ind">② Pronunță</div>
+      </div>
+
+      <div class="tts-row" style="margin-bottom:14px">
+        <button class="btn be" onclick="playESent()" id="sentListenBtn">🔊 Ascultă</button>
+        <button class="btn bs" onclick="newESent()">🔄 Propoziție nouă</button>
+      </div>
+
+      <!-- Mic button -->
+      <div style="text-align:center;margin-bottom:14px">
+        <button class="btn bmic" id="sentMicBtn" onclick="startSentMic()" style="font-size:1.1rem;padding:13px 32px">
+          🎤 Pronunță propoziția!
+        </button>
+      </div>
+
+      <!-- Live transcript -->
+      <div id="sentMicResult" style="margin:10px 0;min-height:60px">
+        <div style="text-align:center;font-size:.78rem;color:var(--muted);margin-bottom:6px">Ce a înțeles microfonul:</div>
+        <div id="sentTranscript" style="background:var(--card2);border-radius:12px;padding:10px 14px;font-size:.95rem;font-weight:700;color:var(--text);text-align:center;min-height:42px;border:1.5px solid var(--border)">—</div>
+      </div>
+
+      <!-- Score display -->
+      <div id="sentMicScore" style="text-align:center;margin:10px 0;min-height:36px"></div>
+
+      <!-- Word-by-word highlight -->
+      <div id="sentWordCheck" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:12px 0;min-height:36px"></div>
+
+      <!-- Hint: show correct sentence -->
+      <div id="sentCorrectHint" style="display:none;background:rgba(67,233,123,.08);border:1.5px solid rgba(67,233,123,.2);border-radius:12px;padding:10px 14px;text-align:center;margin-bottom:12px">
+        <div style="font-size:.72rem;font-weight:800;color:var(--eng);margin-bottom:4px">✅ Propoziția corectă:</div>
+        <div style="font-family:'Fredoka',cursive;font-size:1.1rem;color:var(--text)" id="sentCorrectText"></div>
+      </div>
+
+      <div style="text-align:center;font-size:.7rem;color:rgba(255,255,255,.2);margin-top:8px" id="sentMicInfo"></div>
+    </div>
+
+  </div>
+
+  <!-- Speak -->
+  <div id="eSpeak" style="display:none">
+    <div class="speak-target">
+      <div class="speak-emoji" id="spkEm">🐱</div>
+      <div class="speak-word" id="spkW">cat</div>
+      <div class="speak-ro" id="spkRo">(pisică)</div>
+    </div>
+    <div class="tts-row">
+      <button class="btn be" onclick="playSpk()">🔊 Ascultă pronunția</button>
+    </div>
+
+    <!-- MIC mode (HTTPS only) -->
+    <div id="spkMicMode">
+      <div class="tts-row" style="margin-bottom:10px">
+        <button class="btn bmic" id="micBtn" onclick="startMic()">🎤 Pronunță!</button>
+      </div>
+      <div class="mic-result">
+        <div class="mic-said" id="micSaid">—</div>
+        <div class="mic-verdict" id="micVerdict"></div>
+      </div>
+    </div>
+
+    <!-- FALLBACK type mode (file:// / HTTP) -->
+    <div id="spkTypeMode" style="display:none">
+      <div style="text-align:center;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:10px">
+        ✏️ Ascultă cuvântul și scrie-l în engleză:
+      </div>
+      <div style="display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+        <input id="typeInp" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+          placeholder="scrie cuvântul..."
+          style="font-family:'Fredoka',cursive;font-size:1.4rem;font-weight:600;width:200px;height:52px;text-align:center;background:var(--card2);color:var(--text);border:2px solid var(--border);border-radius:14px;outline:none;padding:0 12px;"
+          onkeydown="if(event.key==='Enter')chkType()">
+        <button class="btn bm" onclick="chkType()">✅</button>
+      </div>
+      <div class="mic-result">
+        <div class="mic-verdict" id="typeVerdict"></div>
+      </div>
+      <div style="text-align:center;font-size:.75rem;color:rgba(255,255,255,.3);margin-top:6px">
+        💡 Microfonul necesită HTTPS. Acum exersezi scrierea!
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn bs" onclick="newSpk()">🔄 Alt cuvânt</button>
+    </div>
+    <div style="text-align:center;font-size:.72rem;color:rgba(255,255,255,.25);margin-top:8px" id="micInfo"></div>
+  </div>
+
+  <!-- Grammar quiz (cls 3-5) -->
+  <div id="eGram" style="display:none">
+
+    <!-- Grammar sub-mode pills -->
+    <div class="mode-row" id="gramSubModes" style="margin-bottom:14px"></div>
+
+    <!-- Grammar rule box -->
+    <div id="gramRuleBox" style="display:none;background:rgba(167,139,250,.08);border:1.5px solid rgba(167,139,250,.25);border-radius:14px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:.68rem;font-weight:800;color:var(--purple);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px">📖 Regulă gramaticală</div>
+      <div style="font-size:.88rem;color:var(--text);line-height:1.6" id="gramRule"></div>
+    </div>
+
+    <!-- Question display -->
+    <div style="background:var(--card2);border-radius:14px;padding:14px 16px;margin-bottom:16px;border:1px solid var(--border)">
+      <div style="font-size:.7rem;font-weight:800;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px" id="gramType">—</div>
+      <div style="font-family:'Fredoka',cursive;font-size:1.2rem;font-weight:600;color:var(--text);line-height:1.5" id="gramQ">—</div>
+    </div>
+
+    <!-- Options -->
+    <div class="mc-grid" id="gramOpts"></div>
+
+    <!-- Error correction / fill-blank input -->
+    <div id="gramFillZone" style="display:none;margin-bottom:14px">
+      <div style="font-size:.78rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:8px" id="gramFillInstr">Completează spațiul liber:</div>
+      <div style="display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap">
+        <input id="gramFillInp" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+          placeholder="scrie răspunsul..."
+          style="font-family:'Fredoka',cursive;font-size:1.2rem;font-weight:600;width:220px;height:50px;text-align:center;background:var(--card2);color:var(--text);border:2px solid var(--border);border-radius:12px;outline:none;padding:0 12px;"
+          onkeydown="if(event.key==='Enter')chkGramFill()">
+        <button class="btn be" onclick="chkGramFill()">✅</button>
+        <button class="btn bs" onclick="newGram()">🔄</button>
+      </div>
+    </div>
+
+    <!-- Explanation after answer -->
+    <div id="gramExplain" style="display:none;background:rgba(96,165,250,.08);border:1.5px solid rgba(96,165,250,.2);border-radius:12px;padding:10px 14px;margin-bottom:10px">
+      <div style="font-size:.68rem;font-weight:800;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">💡 Explicație</div>
+      <div style="font-size:.88rem;color:var(--text);line-height:1.6" id="gramExplainText"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:6px">
+      <button class="btn bs" id="gramNextBtn" onclick="newGram()" style="display:none">➡️ Următoarea întrebare</button>
+      <button class="btn bs" onclick="toggleRule()" style="font-size:.78rem;padding:7px 14px;margin-top:6px">📖 Arată/ascunde regula</button>
+    </div>
+  </div>
+
+  <div class="feedback" id="engFB"></div>
+  <div class="stars-row" id="engStars"></div>
+  <div class="prog-wrap">
+    <div class="prog-head"><span>Progres sesiune</span><span id="engPct">0%</span></div>
+    <div class="prog-bar"><div class="prog-fill pfe" id="engBar" style="width:0%"></div></div>
+  </div>
+</div>
+</section>
+
+</main>
+
+<script>
+/* ══ UTIL ══ */
+const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const P=a=>a[R(0,a.length-1)];
+const S=a=>[...a].sort(()=>Math.random()-.5);
+
+// Stars
+(()=>{const el=document.getElementById('stars');for(let i=0;i<60;i++){const d=document.createElement('div');const s=R(1,3);d.className='star-dot';d.style.cssText=`left:${R(0,100)}%;top:${R(0,100)}%;width:${s}px;height:${s}px;animation-duration:${R(20,60)*.1+1}s;animation-delay:${R(0,50)*.2}s`;el.appendChild(d)}})();
+
+let scores={m:0,e:0};
+const addSc=(t,n=1)=>{scores[t]+=n;document.getElementById(t==='m'?'sM':'sE').textContent=scores[t]};
+const addStar=t=>{const el=document.getElementById(t+'Stars');const s=document.createElement('span');s.className='star';s.textContent='⭐';el.appendChild(s);if(el.children.length>=10){el.innerHTML='';confetti()}};
+const setFB=(t,m,ok)=>{const el=document.getElementById(t+'FB');el.textContent=m;el.className='feedback '+(ok?'ok':'err');clearTimeout(el._t);el._t=setTimeout(()=>{el.textContent='';el.className='feedback'},3200)};
+const updP=(t,d)=>{const p=Math.round(d/12*100);document.getElementById(t==='m'?'mathBar':'engBar').style.width=Math.min(p,100)+'%';document.getElementById(t==='m'?'mathPct2':'engPct').textContent=Math.min(p,100)+'%'};
+let mDone=0,eDone=0;
+
+function confetti(){const c=['#ff6b6b','#43e97b','#ffd700','#a78bfa','#60a5fa','#ff8e53'];for(let i=0;i<30;i++){const p=document.createElement('div');p.className='cp';p.style.cssText=`left:${R(5,95)}vw;width:${R(7,14)}px;height:${R(7,14)}px;background:${P(c)};animation-duration:${R(3,6)*.5}s;animation-delay:${i*50}ms;transform:rotate(${R(0,360)}deg)`;document.body.appendChild(p);setTimeout(()=>p.remove(),4000)}}
+
+function showTab(t){
+  document.querySelectorAll('.section').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('sec-'+t).classList.add('active');
+  document.querySelector('.tab-'+t).classList.add('active');
+}
+
+function speak(txt,lang,rate=.82){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt);u.lang=lang;u.rate=rate;u.pitch=1.05;speechSynthesis.speak(u)}
+
+/* ══ CLASS CONFIG ══ */
+let CLS=1, maxN=30;
+
+const CFG={
+  1:{ml:'Clasa 1 — Adunare & Scădere',el:'Clasa 1 — Vocabular de bază',
+     mm:[{id:'calc',l:'➕➖ Calcul'},{id:'cmp',l:'⚖️ Mai mare/mic'},{id:'fill',l:'❓ Completează'}],
+     md:[{v:10,l:'0–10'},{v:20,l:'0–20'},{v:30,l:'0–30'}],mn:30,
+     em:[{id:'learn',l:'🃏 Flashcard'},{id:'listen',l:'🔊 Ascult & Aleg'},{id:'quiz',l:'🎯 Quiz'},{id:'speak',l:'🎤 Pronunț'}],
+     elvl:[{v:0,l:'Nivel 1'},{v:1,l:'Nivel 2'}]},
+  2:{ml:'Clasa 2 — Calcul 0–100',el:'Clasa 2 — Vocabular extins',
+     mm:[{id:'calc',l:'➕➖ Calcul'},{id:'cmp',l:'⚖️ Comparare'},{id:'fill',l:'❓ Completează'},{id:'word',l:'📖 Probleme'}],
+     md:[{v:50,l:'0–50'},{v:100,l:'0–100'}],mn:100,
+     em:[{id:'learn',l:'🃏 Flashcard'},{id:'listen',l:'🔊 Ascult & Aleg'},{id:'quiz',l:'🎯 Quiz'},{id:'sent',l:'📝 Propoziții'},{id:'speak',l:'🎤 Pronunț'}],
+     elvl:[{v:0,l:'Nivel 1'},{v:1,l:'Nivel 2'},{v:2,l:'Nivel 3'}]},
+  3:{ml:'Clasa 3 — Înmulțire & Împărțire',el:'Clasa 3 — Vocabular & Propoziții',
+     mm:[{id:'calc',l:'➕➖ Calcul'},{id:'mul',l:'✖️➗ Înmul./Imp.'},{id:'fill',l:'❓ Completează'},{id:'word',l:'📖 Probleme'}],
+     md:[{v:100,l:'0–100'},{v:1000,l:'0–1000'}],mn:1000,
+     em:[{id:'learn',l:'🃏 Flashcard'},{id:'listen',l:'🔊 Ascult & Aleg'},{id:'quiz',l:'🎯 Quiz'},{id:'sent',l:'📝 Propoziții'},{id:'speak',l:'🎤 Pronunț'}],
+     elvl:[{v:1,l:'Nivel 2'},{v:2,l:'Nivel 3'},{v:3,l:'Nivel 4'}]},
+  4:{ml:'Clasa 4 — Fracții & Calcul avansat',el:'Clasa 4 — Conversații & Gramatică',
+     mm:[{id:'calc',l:'➕➖ Calcul'},{id:'mul',l:'✖️➗ Calcul'},{id:'frac',l:'½ Fracții'},{id:'word',l:'📖 Probleme'},{id:'geo',l:'📐 Geometrie'}],
+     md:[{v:1000,l:'0–1k'},{v:10000,l:'0–10k'}],mn:10000,
+     em:[{id:'learn',l:'🃏 Flashcard'},{id:'listen',l:'🔊 Ascult & Aleg'},{id:'quiz',l:'🎯 Quiz'},{id:'sent',l:'📝 Propoziții'},{id:'gram',l:'📝 Gramatică'},{id:'speak',l:'🎤 Pronunț'}],
+     elvl:[{v:2,l:'Nivel 3'},{v:3,l:'Nivel 4'},{v:4,l:'Nivel 5'}]},
+  5:{ml:'Clasa 5 — Algebră & Geometrie',el:'Clasa 5 — Engleză avansată',
+     mm:[{id:'calc',l:'➕➖ Operații'},{id:'mul',l:'✖️➗ Calcul'},{id:'frac',l:'½ Fracții'},{id:'eq',l:'𝑥 Ecuații'},{id:'pct',l:'% Procente'},{id:'geo',l:'📐 Geometrie'},{id:'word',l:'📖 Probleme'}],
+     md:[{v:10000,l:'0–10k'},{v:100000,l:'0–100k'}],mn:100000,
+     em:[{id:'learn',l:'🃏 Flashcard'},{id:'listen',l:'🔊 Ascult & Aleg'},{id:'quiz',l:'🎯 Quiz'},{id:'sent',l:'📝 Propoziții'},{id:'gram',l:'📝 Gramatică'},{id:'speak',l:'🎤 Pronunț'}],
+     elvl:[{v:3,l:'Nivel 4'},{v:4,l:'Nivel 5'},{v:5,l:'Nivel 6'}]},
+};
+
+function setClass(n){
+  CLS=n;maxN=CFG[n].mn;
+  document.querySelectorAll('.cls-pill').forEach(b=>b.classList.remove('active'));
+  document.getElementById('c'+n).classList.add('active');
+  document.getElementById('mathBanner').textContent='📚 '+CFG[n].ml;
+  document.getElementById('engBanner').textContent='📚 '+CFG[n].el;
+  mDone=eDone=0;updP('m',0);updP('e',0);
+  document.getElementById('mathStars').innerHTML='';document.getElementById('engStars').innerHTML='';
+  document.getElementById('mathFB').textContent='';document.getElementById('engFB').textContent='';
+  buildMathUI();buildEngUI();
+}
+
+/* ══════════════════════
+   MATEMATICĂ
+══════════════════════ */
+let mathMode='calc',curMathAns=0,curCmp={},fillAns=0,mulAns=0,eqData={},geoAns=0,wordAns=0,pctAns=0,fracData={};
+
+function buildMathUI(){
+  const c=CFG[CLS];maxN=c.mn;
+  const mr=document.getElementById('mathModes');mr.innerHTML='';
+  c.mm.forEach((m,i)=>{const b=document.createElement('button');b.className='mpill'+(i===0?' am':'');b.textContent=m.l;b.onclick=()=>setMM(m.id);mr.appendChild(b)});
+  const dr=document.getElementById('mathDiffs');dr.innerHTML='';
+  c.md.forEach((d,i)=>{const b=document.createElement('button');b.className='dpill'+(i===0?' dm':'');b.textContent=d.l;b.onclick=()=>{maxN=d.v;document.querySelectorAll('.dpill').forEach(x=>x.classList.remove('dm'));b.classList.add('dm');refreshM()};dr.appendChild(b)});
+  setMM(c.mm[0].id);
+}
+
+function setMM(m){
+  mathMode=m;
+  ['mCalc','mCmp','mFill','mMul','mFrac','mWord','mGeo','mEq','mPct'].forEach(id=>document.getElementById(id).style.display='none');
+  const map={calc:'mCalc',cmp:'mCmp',fill:'mFill',mul:'mMul',frac:'mFrac',word:'mWord',geo:'mGeo',eq:'mEq',pct:'mPct'};
+  if(map[m]) document.getElementById(map[m]).style.display='';
+  document.querySelectorAll('#mathModes .mpill').forEach(b=>b.classList.remove('am'));
+  const idx=CFG[CLS].mm.findIndex(x=>x.id===m);
+  if(idx>=0) document.querySelectorAll('#mathModes .mpill')[idx].classList.add('am');
+  refreshM();
+}
+function refreshM(){document.getElementById('mathFB').textContent='';if(mathMode==='calc')newCalc();else if(mathMode==='cmp')newCmp();else if(mathMode==='fill')newFill();else if(mathMode==='mul')newMul();else if(mathMode==='frac')newFrac();else if(mathMode==='word')newWord();else if(mathMode==='geo')newGeo();else if(mathMode==='eq')newEq();else if(mathMode==='pct')newPct()}
+
+function mOK(msg){setFB('m',msg,true);addSc('m');addStar('m');mDone++;updP('m',mDone)}
+function mErr(msg){setFB('m',msg,false)}
+
+// ── Calc ──
+function newCalc(){
+  const inp=document.getElementById('calcInp');inp.value='';inp.className='ans-input';
+  const op=P(['+','-']);let a,b;
+  if(op==='+'){a=R(0,maxN);b=R(0,maxN-a);curMathAns=a+b}
+  else{a=R(0,maxN);b=R(0,a);curMathAns=a-b}
+  document.getElementById('calcText').textContent=`${a} ${op==='+'?'➕':'➖'} ${b} = ?`;
+  inp.focus();
+}
+function chkCalc(){
+  const v=+document.getElementById('calcInp').value;if(isNaN(v))return;
+  const inp=document.getElementById('calcInp');
+  if(v===curMathAns){inp.className='ans-input ok';mOK('🎉 Corect! Bravo!');setTimeout(newCalc,1200)}
+  else{inp.className='ans-input err';mErr('❌ Răspuns corect: '+curMathAns);setTimeout(()=>inp.className='ans-input',1500)}
+}
+
+// ── Compare ──
+function newCmp(){
+  const a=R(0,maxN),b=R(0,maxN);
+  curCmp={a,b,op:a<b?'lt':a>b?'gt':'eq'};
+  document.getElementById('cA').textContent=a;document.getElementById('cB').textContent=b;
+  document.querySelectorAll('.cmp-btn').forEach(x=>{x.className='cmp-btn';x.disabled=false});
+  document.getElementById('mathFB').textContent='';
+}
+function chkCmp(c){
+  const map={lt:'bLt',eq:'bEq',gt:'bGt'};const btn=document.getElementById(map[c]);
+  if(c===curCmp.op){btn.className='cmp-btn sok';document.querySelectorAll('.cmp-btn').forEach(x=>x.disabled=true);const l={lt:'mai mic',eq:'egal',gt:'mai mare'};mOK(`🎉 Corect! ${curCmp.a} este ${l[c]} decât ${curCmp.b}!`);setTimeout(newCmp,1900)}
+  else{btn.className='cmp-btn serr';mErr('❌ Nu e corect!');setTimeout(()=>btn.className='cmp-btn',1000)}
+}
+
+// ── Fill blank ──
+function newFill(){
+  const inp=document.getElementById('fillInp');inp.value='';inp.className='ans-input';
+  const op=P(['+','-']);const lim=Math.min(maxN,9999);let a,b,res;
+  if(op==='+'){a=R(0,lim);b=R(0,lim-a);res=a+b}else{a=R(0,lim);b=R(0,a);res=a-b}
+  const h=R(0,2);const sym=op==='+'?'➕':'➖';
+  if(h===0){document.getElementById('fillText').textContent=`? ${sym} ${b} = ${res}`;fillAns=a}
+  else if(h===1){document.getElementById('fillText').textContent=`${a} ${sym} ? = ${res}`;fillAns=b}
+  else{document.getElementById('fillText').textContent=`${a} ${sym} ${b} = ?`;fillAns=res}
+  inp.focus();
+}
+function chkFill(){
+  const v=+document.getElementById('fillInp').value;if(isNaN(v))return;
+  const inp=document.getElementById('fillInp');
+  if(v===fillAns){inp.className='ans-input ok';mOK('🎉 Corect!');setTimeout(newFill,1200)}
+  else{inp.className='ans-input err';mErr('❌ Răspuns corect: '+fillAns);setTimeout(()=>inp.className='ans-input',1500)}
+}
+
+// ── Mul/Div ──
+let mulOp='×';
+function newMul(){
+  const inp=document.getElementById('mulInp');inp.value='';inp.className='ans-input';
+  mulOp=P(['×','÷']);const lim=CLS>=4?12:10;let a,b;
+  if(mulOp==='×'){a=R(1,lim);b=R(1,lim);mulAns=a*b}
+  else{b=R(1,lim);mulAns=R(1,lim);a=b*mulAns}
+  document.getElementById('mulText').textContent=`${a} ${mulOp==='×'?'✖️':'➗'} ${b} = ?`;
+  inp.focus();
+}
+function chkMul(){
+  const v=+document.getElementById('mulInp').value;if(isNaN(v))return;
+  const inp=document.getElementById('mulInp');
+  if(v===mulAns){inp.className='ans-input ok';mOK('🎉 Corect!');setTimeout(newMul,1200)}
+  else{inp.className='ans-input err';mErr('❌ Răspuns corect: '+mulAns);setTimeout(()=>inp.className='ans-input',1500)}
+}
+
+// ── Fractions ──
+const DENS=[2,3,4,5,6,8,10,12];
+function newFrac(){
+  document.getElementById('fracN').value='';document.getElementById('fracD').value='';
+  document.getElementById('fracAnsRow').style.display='';
+  document.getElementById('fracAnsSimple').style.display='none';
+  const type=P(CLS>=5?['add','sub','mul','simplify']:CLS>=4?['add','sub','simplify']:['show','simplify']);
+  const d1=P(DENS),d2=P(DENS);const n1=R(1,d1-1),n2=R(1,d2-1);
+  if(type==='show'||type==='simplify'){
+    const d=P(DENS);const n=R(1,d-1);fracData={n,d,type:'show'};
+    document.getElementById('fracDisp').innerHTML=`<div style="text-align:center;font-size:.85rem;color:var(--muted);margin-bottom:10px">Scrie fracția afișată:</div><div class="frac-display"><div class="frac-box"><div class="frac-num">${n}</div><div class="frac-den">${d}</div></div><span class="frac-op">=</span><div class="frac-box frac-q"><div class="frac-num">?</div><div class="frac-den">?</div></div></div>`;
+    document.getElementById('fracLabel').textContent='Identifică fracția:';
+  } else if(type==='add'){
+    const lcd=lcm(d1,d2);const rn=n1*(lcd/d1)+n2*(lcd/d2);const g=gcd(rn,lcd);fracData={n:rn/g,d:lcd/g,type:'frac'};
+    document.getElementById('fracDisp').innerHTML=`<div class="frac-display"><div class="frac-box"><div class="frac-num">${n1}</div><div class="frac-den">${d1}</div></div><span class="frac-op">➕</span><div class="frac-box"><div class="frac-num">${n2}</div><div class="frac-den">${d2}</div></div><span class="frac-op">=</span><div class="frac-box frac-q"><div class="frac-num">?</div><div class="frac-den">?</div></div></div>`;
+    document.getElementById('fracLabel').textContent='Adună fracțiile (formă simplificată):';
+  } else if(type==='sub'){
+    let an=n1*(lcm(d1,d2)/d1),bd=lcm(d1,d2),bn=n2*(lcm(d1,d2)/d2);if(an<bn){const tmp=n1;const _=d1;n1=n2;n2=tmp;an=n1*(lcm(d1,d2)/d1);bn=n2*(lcm(d1,d2)/d2)}
+    const rn2=an-bn;const g2=gcd(rn2||1,bd);fracData={n:rn2/g2,d:bd/g2,type:'frac'};
+    document.getElementById('fracDisp').innerHTML=`<div class="frac-display"><div class="frac-box"><div class="frac-num">${n1}</div><div class="frac-den">${d1}</div></div><span class="frac-op">➖</span><div class="frac-box"><div class="frac-num">${n2}</div><div class="frac-den">${d2}</div></div><span class="frac-op">=</span><div class="frac-box frac-q"><div class="frac-num">?</div><div class="frac-den">?</div></div></div>`;
+    document.getElementById('fracLabel').textContent='Scade fracțiile:';
+  } else {
+    const a=R(1,5),b=R(1,5);fracData={n:n1*a,d:d1*b,sn:n1,sd:d1,type:'mul'};
+    document.getElementById('fracDisp').innerHTML=`<div class="frac-display"><div class="frac-box"><div class="frac-num">${n1*a}</div><div class="frac-den">${d1*b}</div></div><span class="frac-op">=</span><div class="frac-box frac-q"><div class="frac-num">?</div><div class="frac-den">?</div></div></div>`;
+    document.getElementById('fracLabel').textContent='Simplifică fracția:';
+  }
+}
+function gcd(a,b){while(b){const t=b;b=a%b;a=t}return a}
+function lcm(a,b){return a*b/gcd(a,b)}
+function chkFrac(){
+  const n=+document.getElementById('fracN').value,d=+document.getElementById('fracD').value;if(isNaN(n)||isNaN(d))return;
+  const fd=fracData;
+  const ok=fracData.type==='mul'?(n===fd.sn&&d===fd.sd)||(n/d===fd.sn/fd.sd&&gcd(n,d)===Math.min(n,d)):(n===fd.n&&d===fd.d)||(n!==0&&d!==0&&n/d===fd.n/fd.d&&gcd(n,d)===1);
+  if(ok){mOK('🎉 Corect!');setTimeout(newFrac,1200)}
+  else mErr(`❌ Răspuns corect: ${fd.type==='mul'?fd.sn+'/'+fd.sd:fd.n+'/'+fd.d}`)
+}
+function chkFracSimple(){
+  const v=+document.getElementById('fracSimpleInp').value;if(isNaN(v))return;
+  if(v===fracData.n){mOK('🎉 Corect!');setTimeout(newFrac,1200)}else mErr('❌ Răspuns corect: '+fracData.n)
+}
+
+// ── Word problems ──
+const WPROBS={
+  1:[
+    {t:(a,b)=>`Maria are ${a} mere. Îi dă lui Ion ${b} mere. Câte mere îi rămân Mariei?`,fn:(a,b)=>a-b,gen:()=>{const b=R(1,10);return[R(b,20),b]}},
+    {t:(a,b)=>`Ionel are ${a} creioane. Primește încă ${b} creioane. Câte creioane are acum?`,fn:(a,b)=>a+b,gen:()=>[R(1,15),R(1,10)]},
+    {t:(a,b)=>`În clasă sunt ${a} fete și ${b} băieți. Câți elevi sunt în total?`,fn:(a,b)=>a+b,gen:()=>[R(5,15),R(5,15)]},
+  ],
+  2:[
+    {t:(a,b)=>`Un pachet are ${a} bomboane. Mircea cumpără ${b} pachete. Câte bomboane are?`,fn:(a,b)=>a*b,gen:()=>[R(2,10),R(2,6)]},
+    {t:(a,b)=>`La o petrecere sunt ${a} copii. Fiecare copil primește ${b} baloane. Câte baloane sunt în total?`,fn:(a,b)=>a*b,gen:()=>[R(3,8),R(2,5)]},
+    {t:(a,b)=>`Un fermier are ${a*b} ouă și le pune în cutii de câte ${b}. Câte cutii complete umple?`,fn:(a,b)=>a,gen:()=>{const a=R(2,9);const b=R(2,8);return[a,b]}},
+  ],
+  3:[
+    {t:(a,b)=>`Un tren parcurge ${a} km în ${b} ore. Câți km parcurge în 1 oră?`,fn:(a,b)=>a/b,gen:()=>{const b=R(2,9);return[b*R(2,12),b]}},
+    {t:(a,b)=>`Ana citește ${a} pagini pe zi. Câte pagini citește în ${b} zile?`,fn:(a,b)=>a*b,gen:()=>[R(5,30),R(2,10)]},
+    {t:(a,b,c)=>`O cutie are ${a} ciocolate. Mihai mănâncă ${b} pe zi. După ${c} zile, câte ciocolate au rămas?`,fn:(a,b,c)=>a-b*c,gen:()=>{const b=R(1,4);const c=R(1,5);return[b*c+R(1,10),b,c]},args:3},
+  ],
+  4:[
+    {t:(a,b)=>`Un magazin vinde ${a} produse pe zi. Câte produse vinde în ${b} zile?`,fn:(a,b)=>a*b,gen:()=>[R(20,200),R(5,30)]},
+    {t:(a,b,c)=>`O mașină consumă ${a}L de benzină la ${b}km. Câți km face cu ${c}L?`,fn:(a,b,c)=>Math.round(b*c/a),gen:()=>{const a=R(5,12);return[a,R(60,200),R(a,a*5)]},args:3},
+    {t:(a,b)=>`Prețul unui produs este ${a} lei. Se reduce cu ${b} lei. Care este noul preț?`,fn:(a,b)=>a-b,gen:()=>{const b=R(5,50);return[b+R(10,100),b]}},
+  ],
+  5:[
+    {t:(a,b,c)=>`Un bazin se umple în ${a} ore cu robinet A și în ${b} ore cu robinet B. Împreună, în câte minute umplu ${c}% din bazin?`,fn:(a,b,c)=>Math.round(a*b/(a+b)*60*c/100),gen:()=>[R(2,6),R(2,6),R(25,100)],args:3},
+    {t:(a,b)=>`Viteza unui tren este ${a} km/h. Distanța este ${a*b} km. Câte ore durează călătoria?`,fn:(a,b)=>b,gen:()=>[R(40,120),R(2,8)]},
+    {t:(a,b,c)=>`La un examen, ${a} elevi au luat note de ${b}. ${c} elevi au luat nota ${b-1}. Câți elevi sunt în total dacă restul au luat note mai mici?`,fn:(a,b,c)=>a+c+R(2,8),gen:()=>[R(3,10),R(8,10),R(2,8)],args:3},
+  ],
+};
+function newWord(){
+  const probs=WPROBS[CLS]||WPROBS[1];const prob=P(probs);
+  const args=prob.gen();wordAns=prob.fn(...args);
+  document.getElementById('wordText').textContent=prob.t(...args);
+  document.getElementById('wordInp').value='';document.getElementById('wordInp').className='ans-input wide';
+  document.getElementById('wordInp').focus();
+}
+function chkWord(){
+  const v=+document.getElementById('wordInp').value;if(isNaN(v))return;
+  if(Math.abs(v-wordAns)<=0.5){document.getElementById('wordInp').className='ans-input wide ok';mOK('🎉 Corect! Problemă rezolvată!');setTimeout(newWord,1500)}
+  else{document.getElementById('wordInp').className='ans-input wide err';mErr('❌ Răspuns corect: '+wordAns);setTimeout(()=>document.getElementById('wordInp').className='ans-input wide',1500)}
+}
+
+// ── Geometry ──
+const GEO=[
+  {name:'Perimetrul unui pătrat',hint:'<strong>Pătrat</strong>: toate laturile sunt egale.<br>Formula: <strong>P = 4 × latura</strong>',
+   gen:()=>{const l=R(2,50);return{text:`Latura pătratului = ${l} cm. Calculează perimetrul (cm):`,ans:4*l}},cls:[3,4,5]},
+  {name:'Aria unui pătrat',hint:'<strong>Pătrat</strong><br>Formula: <strong>A = latura × latura</strong>',
+   gen:()=>{const l=R(2,20);return{text:`Latura pătratului = ${l} cm. Calculează aria (cm²):`,ans:l*l}},cls:[4,5]},
+  {name:'Perimetrul unui dreptunghi',hint:'<strong>Dreptunghi</strong>: două perechi de laturi egale.<br>Formula: <strong>P = 2 × (lungime + lățime)</strong>',
+   gen:()=>{const a=R(2,40),b=R(2,40);return{text:`Lungime = ${a} cm, Lățime = ${b} cm. Perimetrul (cm):`,ans:2*(a+b)}},cls:[3,4,5]},
+  {name:'Aria unui dreptunghi',hint:'<strong>Dreptunghi</strong><br>Formula: <strong>A = lungime × lățime</strong>',
+   gen:()=>{const a=R(2,30),b=R(2,30);return{text:`Lungime = ${a} cm, Lățime = ${b} cm. Aria (cm²):`,ans:a*b}},cls:[4,5]},
+  {name:'Perimetrul unui triunghi',hint:'<strong>Triunghi</strong><br>Formula: <strong>P = a + b + c</strong>',
+   gen:()=>{const a=R(3,20),b=R(3,20),c=R(3,20);return{text:`Laturile triunghiului: a = ${a} cm, b = ${b} cm, c = ${c} cm. Perimetrul (cm):`,ans:a+b+c}},cls:[3,4,5]},
+  {name:'Aria unui triunghi',hint:'<strong>Triunghi</strong><br>Formula: <strong>A = (baza × înălțimea) ÷ 2</strong>',
+   gen:()=>{const b=R(2,20)*2,h=R(2,20);return{text:`Baza = ${b} cm, Înălțimea = ${h} cm. Aria (cm²):`,ans:(b*h)/2}},cls:[4,5]},
+  {name:'Circumferința cercului',hint:'<strong>Cerc</strong><br>Formula: <strong>C = 2 × π × r</strong> (π ≈ 3.14)',
+   gen:()=>{const r=R(1,15);return{text:`Raza cercului = ${r} cm. Circumferința (cm, rotunjit):`,ans:Math.round(2*3.14*r)}},cls:[5]},
+  {name:'Aria cercului',hint:'<strong>Cerc</strong><br>Formula: <strong>A = π × r²</strong> (π ≈ 3.14)',
+   gen:()=>{const r=R(1,12);return{text:`Raza cercului = ${r} cm. Aria (cm², rotunjit):`,ans:Math.round(3.14*r*r)}},cls:[5]},
+  {name:'Volumul cubului',hint:'<strong>Cub</strong><br>Formula: <strong>V = latura³</strong>',
+   gen:()=>{const l=R(2,10);return{text:`Latura cubului = ${l} cm. Volumul (cm³):`,ans:l*l*l}},cls:[5]},
+  {name:'Volumul paralelipipedului',hint:'<strong>Paralelipiped</strong><br>Formula: <strong>V = lungime × lățime × înălțime</strong>',
+   gen:()=>{const a=R(2,10),b=R(2,10),c=R(2,10);return{text:`L=${a}cm, l=${b}cm, h=${c}cm. Volumul (cm³):`,ans:a*b*c}},cls:[5]},
+];
+let geoItem=null;
+function newGeo(){
+  const avail=GEO.filter(g=>g.cls.includes(CLS));geoItem=P(avail);const q=geoItem.gen();geoAns=q.ans;
+  document.getElementById('geoHint').innerHTML=geoItem.hint;
+  document.getElementById('geoText').textContent=q.text;
+  document.getElementById('geoInp').value='';document.getElementById('geoInp').className='ans-input wide';
+  document.getElementById('geoInp').focus();
+}
+function chkGeo(){
+  const v=+document.getElementById('geoInp').value;if(isNaN(v))return;
+  if(Math.abs(v-geoAns)<=0.5){document.getElementById('geoInp').className='ans-input wide ok';mOK('🎉 Corect!');setTimeout(newGeo,1300)}
+  else{document.getElementById('geoInp').className='ans-input wide err';mErr('❌ Răspuns corect: '+geoAns);setTimeout(()=>document.getElementById('geoInp').className='ans-input wide',1500)}
+}
+
+// ── Equations ──
+function newEq(){
+  document.getElementById('eqInp').value='';document.getElementById('eqInp').className='ans-input';
+  const type=P(CLS>=5?['ax=b','axb=c','axbc=d','ax2=b']:['ax=b','axb=c']);
+  let txt='';
+  if(type==='ax=b'){const x=R(1,20);const a=R(2,15);eqData={x};txt=`${a} × x = ${a*x}`}
+  else if(type==='axb=c'){const x=R(1,30);const a=R(2,10);const b=R(1,20);eqData={x};txt=`${a} × x ${b>0?'+ '+b:'- '+Math.abs(b)} = ${a*x+b}`}
+  else if(type==='axbc=d'){const x=R(1,15);const a=R(2,8);const b=R(1,10);const c=R(1,10);eqData={x};txt=`${a} × x + ${b} × ${c} = ${a*x+b*c+R(1,5)}`;eqData={x};const total=a*x+b*c;txt=`${a} × x + ${b} = ${total}`;eqData={x:(total-b)/a}}
+  else{const x=R(1,10);const a=R(2,8);eqData={x};txt=`${a} × x² = ${a*x*x}`; eqData={x}}
+  document.getElementById('eqText').textContent=txt;
+  document.getElementById('eqInp').focus();
+}
+function chkEq(){
+  const v=+document.getElementById('eqInp').value;if(isNaN(v))return;
+  if(v===eqData.x){document.getElementById('eqInp').className='ans-input ok';mOK('🎉 Corect! x = '+eqData.x);setTimeout(newEq,1300)}
+  else{document.getElementById('eqInp').className='ans-input err';mErr('❌ Răspuns corect: x = '+eqData.x);setTimeout(()=>document.getElementById('eqInp').className='ans-input',1500)}
+}
+
+// ── Percentages ──
+function newPct(){
+  document.getElementById('pctInp').value='';document.getElementById('pctInp').className='ans-input wide';
+  const type=P(['pct_of','what_pct','after_pct']);
+  let txt='';
+  if(type==='pct_of'){const p=P([5,10,15,20,25,30,40,50,75]);const n=R(2,200);pctAns=Math.round(n*p/100);txt=`Cât este ${p}% din ${n}?`}
+  else if(type==='what_pct'){const p=P([10,20,25,50]);const n=R(2,10)*p;pctAns=p;txt=`${n*p/100} reprezintă ce procent din ${n}? (răspuns în %)`}
+  else{const p=P([5,10,15,20,25]);const n=R(50,500);const increase=P([true,false]);pctAns=Math.round(n*(increase?1+p/100:1-p/100));txt=`Un produs costă ${n} lei și se ${increase?'scumpește':'ieftinește'} cu ${p}%. Care este noul preț?`}
+  document.getElementById('pctText').textContent=txt;
+  document.getElementById('pctInp').focus();
+}
+function chkPct(){
+  const v=+document.getElementById('pctInp').value;if(isNaN(v))return;
+  if(Math.abs(v-pctAns)<=1){document.getElementById('pctInp').className='ans-input wide ok';mOK('🎉 Corect! Răspuns: '+pctAns);setTimeout(newPct,1300)}
+  else{document.getElementById('pctInp').className='ans-input wide err';mErr('❌ Răspuns corect: '+pctAns);setTimeout(()=>document.getElementById('pctInp').className='ans-input wide',1500)}
+}
+
+/* ══════════════════════
+   ENGLEZĂ — VOCABULAR
+══════════════════════ */
+// 200+ words across 6 levels
+const VOCAB=[
+  // Level 0 — cls 1 basic
+  {e:'cat',r:'pisică',em:'🐱',lv:0},{e:'dog',r:'câine',em:'🐶',lv:0},{e:'fish',r:'pește',em:'🐟',lv:0},{e:'bird',r:'pasăre',em:'🐦',lv:0},{e:'rabbit',r:'iepure',em:'🐰',lv:0},{e:'horse',r:'cal',em:'🐴',lv:0},{e:'bear',r:'urs',em:'🐻',lv:0},{e:'duck',r:'rată',em:'🦆',lv:0},{e:'pig',r:'porc',em:'🐷',lv:0},{e:'cow',r:'vacă',em:'🐄',lv:0},
+  {e:'red',r:'roșu',em:'🔴',lv:0},{e:'blue',r:'albastru',em:'🔵',lv:0},{e:'green',r:'verde',em:'🟢',lv:0},{e:'yellow',r:'galben',em:'🟡',lv:0},{e:'white',r:'alb',em:'⚪',lv:0},{e:'black',r:'negru',em:'⚫',lv:0},
+  {e:'apple',r:'măr',em:'🍎',lv:0},{e:'banana',r:'banană',em:'🍌',lv:0},{e:'milk',r:'lapte',em:'🥛',lv:0},{e:'water',r:'apă',em:'💧',lv:0},{e:'bread',r:'pâine',em:'🍞',lv:0},{e:'egg',r:'ou',em:'🥚',lv:0},
+  {e:'one',r:'unu',em:'1️⃣',lv:0},{e:'two',r:'doi',em:'2️⃣',lv:0},{e:'three',r:'trei',em:'3️⃣',lv:0},{e:'four',r:'patru',em:'4️⃣',lv:0},{e:'five',r:'cinci',em:'5️⃣',lv:0},{e:'six',r:'șase',em:'6️⃣',lv:0},{e:'seven',r:'șapte',em:'7️⃣',lv:0},{e:'eight',r:'opt',em:'8️⃣',lv:0},{e:'nine',r:'nouă',em:'9️⃣',lv:0},{e:'ten',r:'zece',em:'🔟',lv:0},
+  {e:'head',r:'cap',em:'🗣️',lv:0},{e:'eye',r:'ochi',em:'👁️',lv:0},{e:'nose',r:'nas',em:'👃',lv:0},{e:'hand',r:'mână',em:'✋',lv:0},{e:'foot',r:'picior',em:'🦶',lv:0},
+  {e:'sun',r:'soare',em:'☀️',lv:0},{e:'moon',r:'lună',em:'🌙',lv:0},{e:'star',r:'stea',em:'⭐',lv:0},{e:'rain',r:'ploaie',em:'🌧️',lv:0},{e:'snow',r:'zăpadă',em:'❄️',lv:0},
+  // Level 1 — cls 1-2
+  {e:'mother',r:'mamă',em:'👩',lv:1},{e:'father',r:'tată',em:'👨',lv:1},{e:'sister',r:'soră',em:'👧',lv:1},{e:'brother',r:'frate',em:'👦',lv:1},{e:'baby',r:'bebeluș',em:'👶',lv:1},{e:'friend',r:'prieten',em:'🤝',lv:1},
+  {e:'book',r:'carte',em:'📚',lv:1},{e:'pen',r:'stilou',em:'🖊️',lv:1},{e:'pencil',r:'creion',em:'✏️',lv:1},{e:'bag',r:'ghiozdan',em:'🎒',lv:1},{e:'chair',r:'scaun',em:'🪑',lv:1},{e:'table',r:'masă',em:'🪣',lv:1},{e:'door',r:'ușă',em:'🚪',lv:1},{e:'window',r:'fereastră',em:'🪟',lv:1},
+  {e:'happy',r:'fericit',em:'😊',lv:1},{e:'sad',r:'trist',em:'😢',lv:1},{e:'big',r:'mare',em:'🔵',lv:1},{e:'small',r:'mic',em:'🔹',lv:1},{e:'hot',r:'cald',em:'🌡️',lv:1},{e:'cold',r:'frig',em:'🥶',lv:1},
+  {e:'run',r:'a alerga',em:'🏃',lv:1},{e:'jump',r:'a sări',em:'🦘',lv:1},{e:'eat',r:'a mânca',em:'🍽️',lv:1},{e:'sleep',r:'a dormi',em:'😴',lv:1},{e:'play',r:'a se juca',em:'🎮',lv:1},{e:'read',r:'a citi',em:'📖',lv:1},
+  {e:'house',r:'casă',em:'🏠',lv:1},{e:'school',r:'școală',em:'🏫',lv:1},{e:'park',r:'parc',em:'🌳',lv:1},{e:'car',r:'mașină',em:'🚗',lv:1},{e:'bus',r:'autobuz',em:'🚌',lv:1},{e:'tree',r:'copac',em:'🌳',lv:1},{e:'flower',r:'floare',em:'🌸',lv:1},
+  // Level 2 — cls 2-3
+  {e:'orange',r:'portocală',em:'🍊',lv:2},{e:'strawberry',r:'căpșună',em:'🍓',lv:2},{e:'grapes',r:'struguri',em:'🍇',lv:2},{e:'pizza',r:'pizza',em:'🍕',lv:2},{e:'soup',r:'supă',em:'🍜',lv:2},{e:'cheese',r:'brânză',em:'🧀',lv:2},{e:'butter',r:'unt',em:'🧈',lv:2},{e:'juice',r:'suc',em:'🧃',lv:2},
+  {e:'teacher',r:'profesor',em:'👩‍🏫',lv:2},{e:'student',r:'elev',em:'🧑‍🎓',lv:2},{e:'doctor',r:'medic',em:'👨‍⚕️',lv:2},{e:'police',r:'polițist',em:'👮',lv:2},{e:'farmer',r:'fermier',em:'👨‍🌾',lv:2},{e:'cook',r:'bucătar',em:'👨‍🍳',lv:2},
+  {e:'morning',r:'dimineață',em:'🌅',lv:2},{e:'evening',r:'seară',em:'🌆',lv:2},{e:'night',r:'noapte',em:'🌙',lv:2},{e:'today',r:'azi',em:'📅',lv:2},{e:'tomorrow',r:'mâine',em:'➡️',lv:2},{e:'yesterday',r:'ieri',em:'⬅️',lv:2},
+  {e:'write',r:'a scrie',em:'✍️',lv:2},{e:'swim',r:'a înota',em:'🏊',lv:2},{e:'fly',r:'a zbura',em:'🦅',lv:2},{e:'sing',r:'a cânta',em:'🎵',lv:2},{e:'dance',r:'a dansa',em:'💃',lv:2},{e:'draw',r:'a desena',em:'🎨',lv:2},
+  {e:'angry',r:'supărat',em:'😠',lv:2},{e:'scared',r:'speriat',em:'😱',lv:2},{e:'tired',r:'obosit',em:'😴',lv:2},{e:'hungry',r:'flămând',em:'🍔',lv:2},{e:'tall',r:'înalt',em:'📏',lv:2},{e:'short',r:'scund',em:'🔽',lv:2},{e:'fast',r:'rapid',em:'⚡',lv:2},{e:'slow',r:'lent',em:'🐢',lv:2},
+  {e:'lion',r:'leu',em:'🦁',lv:2},{e:'elephant',r:'elefant',em:'🐘',lv:2},{e:'giraffe',r:'girafă',em:'🦒',lv:2},{e:'tiger',r:'tigru',em:'🐯',lv:2},{e:'monkey',r:'maimuță',em:'🐒',lv:2},{e:'snake',r:'șarpe',em:'🐍',lv:2},{e:'frog',r:'broască',em:'🐸',lv:2},
+  // Level 3 — cls 3-4
+  {e:'hospital',r:'spital',em:'🏥',lv:3},{e:'library',r:'bibliotecă',em:'📚',lv:3},{e:'museum',r:'muzeu',em:'🏛️',lv:3},{e:'airport',r:'aeroport',em:'✈️',lv:3},{e:'station',r:'gară',em:'🚉',lv:3},{e:'market',r:'piață',em:'🏪',lv:3},
+  {e:'engineer',r:'inginer',em:'⚙️',lv:3},{e:'scientist',r:'om de știință',em:'🔬',lv:3},{e:'artist',r:'artist',em:'🎨',lv:3},{e:'writer',r:'scriitor',em:'✍️',lv:3},{e:'pilot',r:'pilot',em:'✈️',lv:3},
+  {e:'earthquake',r:'cutremur',em:'🌋',lv:3},{e:'volcano',r:'vulcan',em:'🌋',lv:3},{e:'hurricane',r:'uragan',em:'🌀',lv:3},{e:'drought',r:'secetă',em:'☀️',lv:3},{e:'flood',r:'inundație',em:'🌊',lv:3},
+  {e:'geography',r:'geografie',em:'🗺️',lv:3},{e:'history',r:'istorie',em:'📜',lv:3},{e:'science',r:'știință',em:'🔬',lv:3},{e:'mathematics',r:'matematică',em:'🔢',lv:3},{e:'language',r:'limbă',em:'🗣️',lv:3},{e:'music',r:'muzică',em:'🎵',lv:3},
+  {e:'planet',r:'planetă',em:'🌍',lv:3},{e:'galaxy',r:'galaxie',em:'🌌',lv:3},{e:'asteroid',r:'asteroid',em:'☄️',lv:3},{e:'telescope',r:'telescop',em:'🔭',lv:3},{e:'microscope',r:'microscop',em:'🔬',lv:3},
+  {e:'excited',r:'entuziasmat',em:'🤩',lv:3},{e:'proud',r:'mândru',em:'😤',lv:3},{e:'nervous',r:'nervos',em:'😬',lv:3},{e:'bored',r:'plictisit',em:'😒',lv:3},{e:'surprised',r:'surprins',em:'😲',lv:3},
+  // Level 4 — cls 4-5
+  {e:'democracy',r:'democrație',em:'🗳️',lv:4},{e:'constitution',r:'constituție',em:'📜',lv:4},{e:'parliament',r:'parlament',em:'🏛️',lv:4},{e:'economy',r:'economie',em:'💹',lv:4},{e:'population',r:'populație',em:'👥',lv:4},
+  {e:'electricity',r:'electricitate',em:'⚡',lv:4},{e:'gravity',r:'gravitație',em:'🌍',lv:4},{e:'atmosphere',r:'atmosferă',em:'🌤️',lv:4},{e:'photosynthesis',r:'fotosinteză',em:'🌿',lv:4},{e:'evolution',r:'evoluție',em:'🦕',lv:4},
+  {e:'consequence',r:'consecință',em:'⚠️',lv:4},{e:'opportunity',r:'oportunitate',em:'🚀',lv:4},{e:'responsibility',r:'responsabilitate',em:'✅',lv:4},{e:'achievement',r:'realizare',em:'🏆',lv:4},{e:'environment',r:'mediu înconjurător',em:'🌱',lv:4},
+  {e:'investigate',r:'a investiga',em:'🔍',lv:4},{e:'calculate',r:'a calcula',em:'🧮',lv:4},{e:'describe',r:'a descrie',em:'📝',lv:4},{e:'explain',r:'a explica',em:'💬',lv:4},{e:'compare',r:'a compara',em:'⚖️',lv:4},
+  {e:'ancient',r:'antic',em:'🏺',lv:4},{e:'modern',r:'modern',em:'🏙️',lv:4},{e:'traditional',r:'tradițional',em:'🎎',lv:4},{e:'digital',r:'digital',em:'💻',lv:4},{e:'global',r:'global',em:'🌍',lv:4},
+  // Level 5 — cls 5
+  {e:'hypothesis',r:'ipoteză',em:'🔬',lv:5},{e:'phenomenon',r:'fenomen',em:'✨',lv:5},{e:'analysis',r:'analiză',em:'📊',lv:5},{e:'synthesis',r:'sinteză',em:'🔗',lv:5},{e:'algorithm',r:'algoritm',em:'💻',lv:5},
+  {e:'biodiversity',r:'biodiversitate',em:'🌿',lv:5},{e:'sustainability',r:'sustenabilitate',em:'♻️',lv:5},{e:'civilization',r:'civilizație',em:'🏛️',lv:5},{e:'industrialization',r:'industrializare',em:'🏭',lv:5},{e:'globalization',r:'globalizare',em:'🌐',lv:5},
+  {e:'perpendicular',r:'perpendicular',em:'📐',lv:5},{e:'circumference',r:'circumferință',em:'⭕',lv:5},{e:'diagonal',r:'diagonală',em:'↗️',lv:5},{e:'coefficient',r:'coeficient',em:'🔢',lv:5},{e:'variable',r:'variabilă',em:'𝑥',lv:5},
+  {e:'approximately',r:'aproximativ',em:'≈',lv:5},{e:'therefore',r:'prin urmare',em:'∴',lv:5},{e:'furthermore',r:'în plus',em:'➕',lv:5},{e:'however',r:'totuși',em:'↩️',lv:5},{e:'although',r:'deși',em:'⚖️',lv:5},
+];
+
+const ESENTS={
+  1:[{w:['I','have','a','cat.'],r:'Eu am o pisică.'},{w:['The','dog','is','big.'],r:'Câinele este mare.'},{w:['I','eat','an','apple.'],r:'Mănânc un măr.'},{w:['She','is','happy.'],r:'Ea este fericită.'},{w:['The','sun','is','yellow.'],r:'Soarele este galben.'}],
+  2:[{w:['My','mother','is','tall.'],r:'Mama mea este înaltă.'},{w:['The','book','is','on','the','table.'],r:'Cartea este pe masă.'},{w:['I','go','to','school','every','day.'],r:'Merg la școală în fiecare zi.'},{w:['He','likes','to','play','football.'],r:'Lui îi place să joace fotbal.'},{w:['We','have','two','cats','and','one','dog.'],r:'Avem două pisici și un câine.'}],
+  3:[{w:['We','study','English','at','school.'],r:'Studiem engleza la școală.'},{w:['The','weather','is','sunny','today.'],r:'Vremea este însorită azi.'},{w:['She','can','swim','very','fast.'],r:'Ea poate înota foarte repede.'},{w:['My','dog','runs','in','the','park','every','morning.'],r:'Câinele meu aleargă în parc în fiecare dimineață.'}],
+  4:[{w:['My','favourite','subject','is','science.'],r:'Materia mea preferată este știința.'},{w:['They','are','playing','in','the','park.'],r:'Ei se joacă în parc.'},{w:['I','would','like','some','water','please.'],r:'Aș vrea puțină apă, vă rog.'},{w:['She','reads','books','every','evening','before','bed.'],r:'Ea citește cărți în fiecare seară înainte de culcare.'}],
+  5:[{w:['The','Amazon','rainforest','is','very','large.'],r:'Pădurea tropicală Amazon este foarte mare.'},{w:['Scientists','have','discovered','a','new','species.'],r:'Oamenii de știință au descoperit o nouă specie.'},{w:['Technology','changes','our','lives','every','day.'],r:'Tehnologia ne schimbă viața în fiecare zi.'},{w:['Reading','books','improves','your','vocabulary','significantly.'],r:'Cititul cărților îți îmbunătățește considerabil vocabularul.'}],
+};
+
+// ════════════════════════════════════════
+// GRAMATICĂ EXTINSĂ
+// ════════════════════════════════════════
+const GRAM_MODES = {
+  3: ['mc','fill','error'],
+  4: ['mc','fill','error','order','translate'],
+  5: ['mc','fill','error','order','translate'],
+};
+
+const GRAM_RULES = {
+  present_simple: {
+    title:'Present Simple',
+    rule:'Se folosește pentru acțiuni repetate sau adevăruri generale.<br>• He/She/It → verb + <strong>s</strong> (ex: she <strong>reads</strong>)<br>• I/You/We/They → verb fără s (ex: they <strong>read</strong>)<br>• Negativ: don\'t / doesn\'t + verb<br>• Întrebare: Do / Does + subiect + verb?'
+  },
+  present_cont: {
+    title:'Present Continuous',
+    rule:'Se folosește pentru acțiuni care au loc ACUM, în acest moment.<br>• Formă: am/is/are + verb + <strong>-ing</strong><br>• Ex: She <strong>is reading</strong> right now.<br>• I am, He/She/It is, We/You/They are'
+  },
+  past_simple: {
+    title:'Past Simple',
+    rule:'Se folosește pentru acțiuni terminate în trecut.<br>• Verbe regulate: verb + <strong>ed</strong> (ex: played, watched)<br>• Verbe neregulate: forme speciale (ex: went, saw, ate)<br>• Negativ: didn\'t + verb (forma de bază)<br>• Întrebare: Did + subiect + verb?'
+  },
+  past_cont: {
+    title:'Past Continuous',
+    rule:'Acțiune în desfășurare la un moment din trecut.<br>• Formă: was/were + verb + <strong>-ing</strong><br>• I/He/She/It → <strong>was</strong> + -ing<br>• We/You/They → <strong>were</strong> + -ing<br>• Ex: She <strong>was sleeping</strong> when I called.'
+  },
+  present_perf: {
+    title:'Present Perfect',
+    rule:'Leagă trecutul de prezent — experiențe sau acțiuni cu efect prezent.<br>• Formă: have/has + participiu trecut<br>• I/You/We/They → <strong>have</strong> + pp<br>• He/She/It → <strong>has</strong> + pp<br>• Ex: She <strong>has visited</strong> Paris three times.'
+  },
+  future: {
+    title:'Future (will / going to)',
+    rule:'• <strong>will</strong> → decizie spontană, predicție (It will rain.)<br>• <strong>going to</strong> → plan dinainte stabilit (I\'m going to study tonight.)<br>• Negativ: won\'t / am not going to<br>• Ex: I <strong>will call</strong> you later. / She <strong>is going to</strong> travel.'
+  },
+  conditionals: {
+    title:'Condiționale',
+    rule:'• <strong>Zero</strong>: If + present, present (legi generale): If you heat water, it boils.<br>• <strong>First</strong>: If + present, will (real): If it rains, I will stay home.<br>• <strong>Second</strong>: If + past, would (ireal/prezent): If I were rich, I would travel.<br>• <strong>Third</strong>: If + past perfect, would have (ireal/trecut): If I had studied, I would have passed.'
+  },
+  passive: {
+    title:'Diateza Pasivă',
+    rule:'Subiectul primește acțiunea (nu o face).<br>• Formă: <strong>to be</strong> + participiu trecut<br>• Present: is/are + pp (The book <strong>is written</strong> by him.)<br>• Past: was/were + pp (The cake <strong>was eaten</strong>.)<br>• Perfect: has/have been + pp'
+  },
+  modals: {
+    title:'Verbe Modale',
+    rule:'• <strong>can</strong> = abilitate prezent (I can swim.)<br>• <strong>could</strong> = abilitate trecut / cerere politicoasă<br>• <strong>must</strong> = obligație puternică (You must stop.)<br>• <strong>should</strong> = sfat (You should exercise.)<br>• <strong>might/may</strong> = posibilitate (It might rain.)<br>• <strong>would</strong> = condiție / cerere politicoasă'
+  },
+  articles: {
+    title:'Articole (a / an / the)',
+    rule:'• <strong>a</strong> → înaintea cuvintelor care încep cu consoană (a cat, a book)<br>• <strong>an</strong> → înaintea cuvintelor care încep cu vocală (an apple, an hour)<br>• <strong>the</strong> → lucru specific, deja menționat (the cat I told you about)<br>• Fără articol → generalități: Cats are friendly.'
+  },
+  prepositions: {
+    title:'Prepoziții de timp și loc',
+    rule:'• <strong>in</strong>: luni, ani, anotimpuri, orașe (in July, in 2024, in Paris)<br>• <strong>on</strong>: zile, date (on Monday, on 5th March)<br>• <strong>at</strong>: ore, momente precise (at 3pm, at night, at home)<br>• <strong>since</strong>: de la un punct fix (since 2020)<br>• <strong>for</strong>: durată (for 3 hours)'
+  },
+  reported: {
+    title:'Vorbire Indirectă (Reported Speech)',
+    rule:'Când relatezi ce a spus cineva, timpurile se schimbă:<br>• present simple → past simple ("I work" → she said she <strong>worked</strong>)<br>• present cont → past cont ("I am working" → she said she <strong>was working</strong>)<br>• will → would ("I will help" → she said she <strong>would help</strong>)<br>• can → could; may → might'
+  },
+};
+
+// GRAMMAR QUESTIONS — 3 levels × 5 modes × many questions
+const GRAM = {
+  3: {
+    mc:[
+      {q:'She ___ to school every day.',opts:['go','goes','going','gone'],a:1,rule:'present_simple',exp:'He/She/It + goes (verb + s)'},
+      {q:'I ___ watching TV right now.',opts:['am','is','are','be'],a:0,rule:'present_cont',exp:'I am + -ing pentru acțiuni prezente'},
+      {q:'They ___ football yesterday.',opts:['play','plays','played','playing'],a:2,rule:'past_simple',exp:'Yesterday → trecut simplu → played'},
+      {q:'He ___ a doctor.',opts:['am','is','are','be'],a:1,rule:'present_simple',exp:'He/She/It + is (verb to be)'},
+      {q:'There ___ many books on the shelf.',opts:['is','are','am','be'],a:1,rule:'present_simple',exp:'Many + substantiv plural → are'},
+      {q:'___ you like pizza?',opts:['Do','Does','Is','Are'],a:0,rule:'present_simple',exp:'You → Do pentru întrebări la Present Simple'},
+      {q:'She ___ not like vegetables.',opts:['do','does','is','has'],a:1,rule:'present_simple',exp:'She → does (negativ: doesn\'t)'},
+      {q:'We ___ dinner at 7pm last night.',opts:['have','had','has','having'],a:1,rule:'past_simple',exp:'Last night → trecut → had (formă neregulată a lui have)'},
+      {q:'Look! It ___ raining outside.',opts:['is','are','was','be'],a:0,rule:'present_cont',exp:'Acum (Look!) → Present Continuous → is + raining'},
+      {q:'___ she speak English?',opts:['Do','Does','Is','Has'],a:1,rule:'present_simple',exp:'She → Does pentru întrebări Present Simple'},
+    ],
+    fill:[
+      {q:'He ___ (go) to school every day.',ans:'goes',rule:'present_simple',exp:'He/She/It → goes'},
+      {q:'They ___ (play) football right now.',ans:'are playing',rule:'present_cont',exp:'Right now → Present Continuous → are playing'},
+      {q:'She ___ (not / like) coffee.',ans:"doesn't like",rule:'present_simple',exp:'She + negație → doesn\'t like'},
+      {q:'I ___ (see) a good film yesterday.',ans:'saw',rule:'past_simple',exp:'Yesterday → trecut → saw (formă neregulată)'},
+      {q:'We ___ (study) English at the moment.',ans:'are studying',rule:'present_cont',exp:'At the moment → Present Continuous'},
+    ],
+    error:[
+      {q:'She don\'t like cats.',correct:'She doesn\'t like cats.',rule:'present_simple',exp:'She → doesn\'t (nu don\'t)'},
+      {q:'He go to school every day.',correct:'He goes to school every day.',rule:'present_simple',exp:'He + go → goes (verb + s)'},
+      {q:'They is playing football.',correct:'They are playing football.',rule:'present_cont',exp:'They → are (nu is)'},
+      {q:'I seen that film yesterday.',correct:'I saw that film yesterday.',rule:'past_simple',exp:'Trecut simplu → saw (nu seen)'},
+      {q:'She was go to the market.',correct:'She was going to the market.',rule:'past_cont',exp:'was/were + verb-ing (past continuous)'},
+    ],
+  },
+  4: {
+    mc:[
+      {q:'She has been studying ___ two hours.',opts:['since','for','during','while'],a:1,rule:'present_perf',exp:'"For" + durată (for 2 hours); "since" + punct fix (since 2pm)'},
+      {q:'If I ___ rich, I would travel the world.',opts:['am','was','were','be'],a:2,rule:'conditionals',exp:'Second Conditional: If + past (were), would + infinitiv'},
+      {q:'The homework ___ already been done.',opts:['has','have','had','is'],a:0,rule:'passive',exp:'Present Perfect Passive: has + been + participiu'},
+      {q:'He ___ to Paris three times.',opts:['has gone','went','has been','goes'],a:2,rule:'present_perf',exp:'"Has been" = a vizitat și s-a întors; "has gone" = e acolo acum'},
+      {q:'By the time she arrived, we ___ finished.',opts:['have','had','has','were'],a:1,rule:'past_simple',exp:'Past Perfect: had + participiu — acțiune înainte de alta în trecut'},
+      {q:'You ___ wear a seatbelt. It\'s the law.',opts:['should','might','must','could'],a:2,rule:'modals',exp:'"Must" = obligație puternică/lege'},
+      {q:'I ___ rather stay home tonight.',opts:['will','would','should','could'],a:1,rule:'modals',exp:'"Would rather" = prefer să'},
+      {q:'The cake ___ by my mother.',opts:['made','was made','has made','is making'],a:1,rule:'passive',exp:'Diateza pasivă: was + participiu trecut'},
+      {q:'She suggested ___ to the new restaurant.',opts:['to go','going','go','goes'],a:1,rule:'present_perf',exp:'"Suggest" + -ing (nu infinitiv)'},
+      {q:'___ you mind opening the window?',opts:['Do','Would','Could','Should'],a:1,rule:'modals',exp:'"Would you mind" = cerere politicoasă + -ing'},
+    ],
+    fill:[
+      {q:'I ___ (live) here since 2015.',ans:'have lived',rule:'present_perf',exp:'Since + punct fix → Present Perfect: have lived'},
+      {q:'If it ___ (rain), we will cancel the picnic.',ans:'rains',rule:'conditionals',exp:'First Conditional: If + Present Simple, will...'},
+      {q:'The letter ___ (send) yesterday.',ans:'was sent',rule:'passive',exp:'Past Passive: was + participiu (sent)'},
+      {q:'She said she ___ (be) tired.',ans:'was',rule:'reported',exp:'Reported Speech: is → was'},
+      {q:'He ___ (already / finish) his homework.',ans:'has already finished',rule:'present_perf',exp:'Present Perfect + already: has finished'},
+    ],
+    error:[
+      {q:'She has went to the market.',correct:'She has gone to the market.',rule:'present_perf',exp:'"Has" + participiu trecut → gone (nu went)'},
+      {q:'If I would have money, I would travel.',correct:'If I had money, I would travel.',rule:'conditionals',exp:'Second Conditional: If + past simple (had), would...'},
+      {q:'The book was wrote by Dickens.',correct:'The book was written by Dickens.',rule:'passive',exp:'Pasiv → participiu trecut corect: written'},
+      {q:'I must to finish this today.',correct:'I must finish this today.',rule:'modals',exp:'Verbele modale (must/can/should) nu iau "to"'},
+      {q:'He told me that he will come.',correct:'He told me that he would come.',rule:'reported',exp:'Reported Speech: will → would'},
+    ],
+    order:[
+      {words:['has','She','Paris','visited','times','three'],ans:'She has visited Paris three times',rule:'present_perf'},
+      {words:['I','if','would','had','travel','money','I'],ans:'If I had money I would travel',rule:'conditionals'},
+      {words:['The','was','film','yesterday','released'],ans:'The film was released yesterday',rule:'passive'},
+      {words:['He','told','me','would','he','come','that'],ans:'He told me that he would come',rule:'reported'},
+      {words:['been','She','for','has','two','studying','hours'],ans:'She has been studying for two hours',rule:'present_perf'},
+    ],
+    translate:[
+      {ro:'Ea a vizitat Parisul de trei ori.',en:'She has visited Paris three times.',rule:'present_perf'},
+      {ro:'Dacă aș fi bogat, aș călători în lume.',en:'If I were rich I would travel the world.',rule:'conditionals'},
+      {ro:'Cartea a fost scrisă de Dickens.',en:'The book was written by Dickens.',rule:'passive'},
+      {ro:'El a spus că va veni.',en:'He said that he would come.',rule:'reported'},
+    ],
+  },
+  5: {
+    mc:[
+      {q:'___ you mind if I opened the window?',opts:['Do','Would','Could','Might'],a:1,rule:'modals',exp:'"Would you mind if" + Past Simple = cerere politicoasă'},
+      {q:'The report ___ be submitted by Friday.',opts:['must','should','might','needn\'t'],a:0,rule:'modals',exp:'"Must" = obligație strictă'},
+      {q:'I wish I ___ speak French fluently.',opts:['can','could','would','will'],a:1,rule:'conditionals',exp:'"Wish" + could = dorință despre prezent (ireal)'},
+      {q:'Despite ___ tired, she continued working.',opts:['be','been','being','to be'],a:2,rule:'present_cont',exp:'"Despite" + -ing (not despite + infinitiv)'},
+      {q:'Had I known earlier, I ___ helped you.',opts:['would','would have','had','could'],a:1,rule:'conditionals',exp:'Third Conditional: Had + pp → would have + pp'},
+      {q:'She ___ rather not discuss the matter.',opts:['will','would','should','could'],a:1,rule:'modals',exp:'"Would rather not" = preferință negativă'},
+      {q:'No sooner ___ he arrived than it started raining.',opts:['had','did','was','has'],a:0,rule:'past_simple',exp:'Inversiune: No sooner + had + pp... than'},
+      {q:'The results ___ announced next week.',opts:['will be','are','were','have been'],a:0,rule:'passive',exp:'Future Passive: will be + participiu'},
+      {q:'It\'s time we ___ something about pollution.',opts:['do','did','have done','are doing'],a:1,rule:'conditionals',exp:'"It\'s time" + past simple (did) = ar trebui să facem'},
+      {q:'She is said ___ the best in her field.',opts:['to be','being','be','is'],a:0,rule:'passive',exp:'"Is said to be" = pasiv cu infinitiv'},
+    ],
+    fill:[
+      {q:'If only I ___ (study) harder for the exam!',ans:'had studied',rule:'conditionals',exp:'If only + Past Perfect = regret despre trecut'},
+      {q:'By 2030, scientists ___ (discover) a cure.',ans:'will have discovered',rule:'future',exp:'Future Perfect: will have + pp — acțiune terminată înainte de un moment viitor'},
+      {q:'She is used to ___ (work) long hours.',ans:'working',rule:'present_cont',exp:'"Be used to" + -ing (nu infinitiv)'},
+      {q:'The building ___ (construct) in 1850.',ans:'was constructed',rule:'passive',exp:'Past Passive: was + participiu'},
+      {q:'He suggested that she ___ (see) a doctor.',ans:'see',rule:'conditionals',exp:'Subjunctive după "suggest that": verb forma de bază'},
+    ],
+    error:[
+      {q:'I wish I would have more time.',correct:'I wish I had more time.',rule:'conditionals',exp:'"Wish" + past simple pentru dorințe prezente (nu would)'},
+      {q:'Despite of being tired, she worked.',correct:'Despite being tired, she worked.',rule:'present_cont',exp:'"Despite" (fără "of") + -ing'},
+      {q:'He is used to work late.',correct:'He is used to working late.',rule:'present_cont',exp:'"Be used to" + -ing (nu infinitiv)'},
+      {q:'No sooner he arrived than it rained.',correct:'No sooner had he arrived than it rained.',rule:'past_simple',exp:'Inversiune cu "No sooner": Had + subiect + pp'},
+      {q:'The results will announced tomorrow.',correct:'The results will be announced tomorrow.',rule:'passive',exp:'Future Passive: will + be + participiu'},
+    ],
+    order:[
+      {words:['she','said','be','to','is','field','the','best','in','her'],ans:'She is said to be the best in her field',rule:'passive'},
+      {words:['only','If','harder','I','for','the','had','studied','exam'],ans:'If only I had studied harder for the exam',rule:'conditionals'},
+      {words:['2030','scientists','will','By','a','have','discovered','cure'],ans:'By 2030 scientists will have discovered a cure',rule:'future'},
+      {words:['used','She','long','is','working','to','hours'],ans:'She is used to working long hours',rule:'present_cont'},
+    ],
+    translate:[
+      {ro:'Dacă aș fi știut, te-aș fi ajutat.',en:'If I had known I would have helped you.',rule:'conditionals'},
+      {ro:'Se spune că ea este cea mai bună în domeniu.',en:'She is said to be the best in her field.',rule:'passive'},
+      {ro:'Până în 2030, oamenii de știință vor fi descoperit un tratament.',en:'By 2030 scientists will have discovered a cure.',rule:'future'},
+      {ro:'El și-a obișnuit să lucreze ore lungi.',en:'He is used to working long hours.',rule:'present_cont'},
+    ],
+  },
+};
+
+/* ══ GRAMMAR STATE ══ */
+let gramSubMode='mc', curGram=null, gramFillAns='';
+
+function buildGramSubModes(){
+  const pool=GRAM_MODES[CLS]||GRAM_MODES[3];
+  const labels={mc:'🔘 Alege',fill:'✏️ Completează',error:'🔍 Găsește eroarea',order:'🔀 Ordonează',translate:'🇷🇴→🇬🇧 Traduce'};
+  const mr=document.getElementById('gramSubModes');mr.innerHTML='';
+  pool.forEach((m,i)=>{
+    const b=document.createElement('button');
+    b.className='mpill'+(i===0?' ae':'');
+    b.textContent=labels[m]||m;
+    b.onclick=()=>{gramSubMode=m;document.querySelectorAll('#gramSubModes .mpill').forEach(x=>x.classList.remove('ae'));b.classList.add('ae');newGram()};
+    mr.appendChild(b);
+  });
+  gramSubMode=pool[0];
+}
+
+function toggleRule(){
+  const rb=document.getElementById('gramRuleBox');
+  rb.style.display=rb.style.display==='none'?'':'none';
+}
+
+function newGram(){
+  document.getElementById('gramExplain').style.display='none';
+  document.getElementById('gramNextBtn').style.display='none';
+  document.getElementById('gramFillZone').style.display='none';
+  document.getElementById('gramOpts').innerHTML='';
+  document.getElementById('gramRuleBox').style.display='none';
+
+  const pool=(GRAM[CLS]||GRAM[3])[gramSubMode]||(GRAM[CLS]||GRAM[3]).mc||[];
+  if(!pool||!pool.length){document.getElementById('gramQ').textContent='Nu există exerciții pentru această clasă/mod.';return}
+  curGram=P(pool);
+
+  // Show rule
+  const ruleData=GRAM_RULES[curGram.rule];
+  if(ruleData){
+    document.getElementById('gramRule').innerHTML=`<strong>${ruleData.title}</strong><br>${ruleData.rule}`;
+  }
+
+  if(gramSubMode==='mc'){
+    document.getElementById('gramType').textContent='🔘 Alege varianta corectă';
+    document.getElementById('gramQ').textContent=curGram.q;
+    const el=document.getElementById('gramOpts');
+    const opts=S(curGram.opts.map((o,i)=>({o,i})));
+    opts.forEach(({o,i})=>{
+      const b=document.createElement('button');b.className='mc-btn';b.textContent=o;
+      b.onclick=()=>{
+        document.querySelectorAll('#gramOpts .mc-btn').forEach(x=>x.onclick=null);
+        if(i===curGram.a){
+          b.classList.add('ok');
+          showGramExplain(curGram.exp,true);
+          eOK('🎉 Corect! '+curGram.exp);
+        } else {
+          b.classList.add('err');
+          document.querySelectorAll('#gramOpts .mc-btn').forEach(x=>{if(x.textContent===curGram.opts[curGram.a])x.classList.add('ok')});
+          showGramExplain(curGram.exp,false);
+          eErr('❌ Răspuns corect: "'+curGram.opts[curGram.a]+'"');
+        }
+      };
+      el.appendChild(b);
+    });
+
+  } else if(gramSubMode==='fill'){
+    document.getElementById('gramType').textContent='✏️ Completează spațiul liber';
+    document.getElementById('gramQ').textContent=curGram.q;
+    gramFillAns=curGram.ans.toLowerCase().trim();
+    document.getElementById('gramFillZone').style.display='';
+    document.getElementById('gramFillInstr').textContent='Scrie forma corectă a verbului:';
+    document.getElementById('gramFillInp').value='';
+    document.getElementById('gramFillInp').style.borderColor='';
+    setTimeout(()=>document.getElementById('gramFillInp').focus(),100);
+
+  } else if(gramSubMode==='error'){
+    document.getElementById('gramType').textContent='🔍 Găsește și corectează eroarea';
+    document.getElementById('gramQ').innerHTML=`<span style="color:var(--err)">"${curGram.q}"</span><br><span style="font-size:.78rem;color:var(--muted)">Scrie propoziția corectată:</span>`;
+    gramFillAns=curGram.correct.toLowerCase().trim();
+    document.getElementById('gramFillZone').style.display='';
+    document.getElementById('gramFillInstr').textContent='Rescrie propoziția corect:';
+    document.getElementById('gramFillInp').value='';
+    document.getElementById('gramFillInp').style.borderColor='';
+    setTimeout(()=>document.getElementById('gramFillInp').focus(),100);
+
+  } else if(gramSubMode==='order'){
+    document.getElementById('gramType').textContent='🔀 Aranjează cuvintele în ordine';
+    document.getElementById('gramQ').innerHTML=`<span style="font-size:.78rem;color:var(--muted)">Formează o propoziție corectă:</span>`;
+    // render shuffled words as clickable chips
+    const shuffled=S([...curGram.words]);
+    let picked=[];
+    const ruleLabel=GRAM_RULES[curGram.rule]?GRAM_RULES[curGram.rule].title:'';
+    document.getElementById('gramQ').innerHTML=`
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Formează propoziția (${ruleLabel}):</div>
+      <div id="orderBank" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:10px"></div>
+      <div id="orderBuilt" style="min-height:38px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:8px;background:rgba(255,255,255,.04);border:1.5px dashed var(--border);border-radius:12px;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="btn be" onclick="chkOrder()" style="font-size:.9rem;padding:8px 20px">✅ Verifică</button>
+        <button class="btn bs" onclick="clearOrder()" style="font-size:.9rem;padding:8px 16px">🗑️</button>
+      </div>`;
+    const bank=document.getElementById('orderBank');
+    shuffled.forEach(w=>{
+      const b=document.createElement('button');
+      b.className='wb-btn';b.textContent=w;
+      b.onclick=()=>{picked.push(w);renderOB(picked);};
+      bank.appendChild(b);
+    });
+    window._orderCorrect=curGram.ans.toLowerCase().replace(/[.,!?]/g,'');
+    window._orderPicked=picked;
+    window.renderOB=(arr)=>{
+      const el=document.getElementById('orderBuilt');if(!el)return;el.innerHTML='';
+      arr.forEach((w,i)=>{const b=document.createElement('button');b.className='built-tok';b.textContent=w;b.onclick=()=>{arr.splice(i,1);renderOB(arr)};el.appendChild(b)});
+    };
+    window.clearOrder=()=>{picked=[];renderOB(picked)};
+    window.chkOrder=()=>{
+      const given=picked.join(' ').toLowerCase().replace(/[.,!?]/g,'');
+      if(given===window._orderCorrect||strSim(given,window._orderCorrect)>=0.9){
+        showGramExplain('Ordinea corectă: <em>'+curGram.ans+'</em>',true);
+        eOK('🎉 Corect!');
+      } else {
+        showGramExplain('Ordinea corectă: <em>'+curGram.ans+'</em>',false);
+        eErr('❌ Nu e corect. Ordinea corectă: '+curGram.ans);
+      }
+    };
+
+  } else if(gramSubMode==='translate'){
+    document.getElementById('gramType').textContent='🇷🇴→🇬🇧 Traduce propoziția';
+    document.getElementById('gramQ').innerHTML=`<span style="color:var(--gold)">"${curGram.ro}"</span><br><span style="font-size:.78rem;color:var(--muted)">Scrie traducerea în engleză:</span>`;
+    gramFillAns=curGram.en.toLowerCase().replace(/[.,!?]/g,'').trim();
+    document.getElementById('gramFillZone').style.display='';
+    document.getElementById('gramFillInstr').textContent='Scrie traducerea în engleză:';
+    document.getElementById('gramFillInp').value='';
+    document.getElementById('gramFillInp').style.borderColor='';
+    setTimeout(()=>document.getElementById('gramFillInp').focus(),100);
+  }
+}
+
+function chkGramFill(){
+  const val=document.getElementById('gramFillInp').value.toLowerCase().replace(/[.,!?]/g,'').trim();
+  if(!val)return;
+  const inp=document.getElementById('gramFillInp');
+  const sim=strSim(val,gramFillAns);
+  const isOk=val===gramFillAns||sim>=0.85;
+  const isClose=sim>=0.65&&!isOk;
+  if(isOk){
+    inp.style.borderColor='var(--ok)';
+    showGramExplain((curGram.exp||'Corect!')+' Răspuns: <em>'+gramFillAns+'</em>',true);
+    eOK('🎉 Corect!');
+  } else if(isClose){
+    inp.style.borderColor='var(--gold)';
+    showGramExplain('Aproape! Răspunsul corect: <em>'+gramFillAns+'</em>. '+(curGram.exp||''),false);
+    eErr('👍 Aproape! Răspuns corect: "'+gramFillAns+'"');
+  } else {
+    inp.style.borderColor='var(--err)';
+    showGramExplain('Răspunsul corect: <em>'+gramFillAns+'</em>. '+(curGram.exp||''),false);
+    eErr('❌ Răspuns corect: "'+gramFillAns+'"');
+  }
+}
+
+function showGramExplain(txt,ok){
+  const el=document.getElementById('gramExplain');
+  const ruleData=GRAM_RULES[curGram?.rule];
+  el.style.display='';
+  document.getElementById('gramExplainText').innerHTML=txt+(ruleData?`<br><span style="color:var(--purple);font-size:.8rem">📖 Regulă: ${ruleData.title}</span>`:'');
+  if(ok){eOK&&eDone++;updP('e',eDone);addStar('e');}
+  document.getElementById('gramNextBtn').style.display='';
+  document.getElementById('gramRuleBox').style.display='';
+  if(ruleData) document.getElementById('gramRule').innerHTML=`<strong>${ruleData.title}</strong><br>${ruleData.rule}`;
+}
+
+/* ══ ENG STATE ══ */
+let engMode='learn',curLvl=0,engIdx=0,engFlipped=false;
+let curListenW=null,curQW=null,curSpkW=null,curESent=null;
+let sentBuilt=[], recognition=null;
+
+function getVocab(){
+  const maxLv=curLvl;
+  return VOCAB.filter(w=>w.lv<=maxLv);
+}
+function getVocabSlice(){
+  const all=getVocab();
+  return all.length>40?S(all).slice(0,40):all;
+}
+
+function buildEngUI(){
+  const c=CFG[CLS];
+  const mr=document.getElementById('engModes');mr.innerHTML='';
+  c.em.forEach((m,i)=>{const b=document.createElement('button');b.className='mpill'+(i===0?' ae':'');b.textContent=m.l;b.onclick=()=>setEM(m.id);mr.appendChild(b)});
+  const lr=document.getElementById('engLevels');lr.innerHTML='';
+  c.elvl.forEach((lv,i)=>{const b=document.createElement('button');b.className='dpill'+(i===0?' de':'');b.textContent=lv.l;b.onclick=()=>{curLvl=lv.v;document.querySelectorAll('#engLevels .dpill').forEach(x=>x.classList.remove('de'));b.classList.add('de');engIdx=0;refreshEng()};if(i===0)curLvl=lv.v;lr.appendChild(b)});
+  buildGramSubModes();
+  setEM(c.em[0].id);
+}
+
+function setEM(m){
+  engMode=m;
+  ['eLearn','eListen','eQuiz','eSent','eSpeak','eGram'].forEach(id=>document.getElementById(id).style.display='none');
+  const map={learn:'eLearn',listen:'eListen',quiz:'eQuiz',sent:'eSent',speak:'eSpeak',gram:'eGram'};
+  if(map[m]) document.getElementById(map[m]).style.display='';
+  document.querySelectorAll('#engModes .mpill').forEach(b=>b.classList.remove('ae'));
+  const idx=CFG[CLS].em.findIndex(x=>x.id===m);
+  if(idx>=0) document.querySelectorAll('#engModes .mpill')[idx].classList.add('ae');
+  document.getElementById('engFB').textContent='';
+  refreshEng();
+}
+function refreshEng(){
+  if(engMode==='learn')renderCard();
+  else if(engMode==='listen')newListen();
+  else if(engMode==='quiz')newEngQ();
+  else if(engMode==='sent'){sentTab='arrange';setSentTab('arrange');newESent();}
+  else if(engMode==='speak')newSpk();
+  else if(engMode==='gram'){buildGramSubModes();newGram();}
+}
+
+function eOK(m){setFB('e',m,true);addSc('e');addStar('e');eDone++;updP('e',eDone)}
+function eErr(m){setFB('e',m,false)}
+
+// ── Flashcard ──
+function renderCard(){
+  const ws=getVocabSlice();if(!ws.length)return;
+  if(engIdx>=ws.length)engIdx=0;
+  const w=ws[engIdx];engFlipped=false;
+  document.getElementById('eCard').classList.remove('flipped');
+  document.getElementById('fcEm').textContent=w.em;document.getElementById('fcW').textContent=w.e;
+  document.getElementById('fcEm2').textContent=w.em;document.getElementById('fcW2').textContent=w.e.toUpperCase();
+  document.getElementById('fcRo').textContent=w.r;
+  const dots=document.getElementById('eDots');
+  const total=Math.min(ws.length,20);
+  dots.innerHTML=Array.from({length:total},(_,i)=>`<div class="edot ${i<engIdx?'done':''} ${i===engIdx?'cur':''}"></div>`).join('');
+}
+function flipCard(){engFlipped=!engFlipped;document.getElementById('eCard').classList.toggle('flipped',engFlipped);if(engFlipped)spkEng()}
+function nextW(){engIdx=(engIdx+1)%getVocabSlice().length;renderCard()}
+function prevW(){const ws=getVocabSlice();engIdx=(engIdx-1+ws.length)%ws.length;renderCard()}
+function spkEng(){const ws=getVocabSlice();if(ws[engIdx])speak(ws[engIdx].e,'en-US',.8)}
+
+// ── Listen & Choose ──
+let curLW=null;
+function newListen(){
+  const ws=S(getVocab()).slice(0,20);curLW=P(ws);
+  const wrong=S(ws.filter(x=>x.e!==curLW.e)).slice(0,3);
+  const opts=S([curLW,...wrong]);
+  const el=document.getElementById('listenOpts');el.innerHTML='';
+  opts.forEach(w=>{
+    const b=document.createElement('div');b.className='lopt';
+    b.innerHTML=`<span class="lem">${w.em}</span><span class="lro">${w.r}</span>`;
+    b.onclick=()=>chkListen(b,w.e===curLW.e);el.appendChild(b)});
+  setTimeout(()=>playListen(),400);
+}
+function playListen(){if(curLW)speak(curLW.e,'en-US',.75)}
+function chkListen(btn,ok){
+  document.querySelectorAll('.lopt').forEach(b=>b.onclick=null);
+  if(ok){btn.classList.add('ok');eOK(`🎉 Corect! "${curLW.e}" = ${curLW.r}`);speak(curLW.e,'en-US',.8);setTimeout(newListen,2000)}
+  else{btn.classList.add('err');eErr(`❌ Era: ${curLW.em} "${curLW.e}"`);speak(curLW.e,'en-US',.8);setTimeout(()=>{btn.classList.remove('err');btn.onclick=()=>chkListen(btn,false)},1400)}
+}
+
+// ── Quiz ro→en ──
+function newEngQ(){
+  const ws=S(getVocab()).slice(0,30);curQW=P(ws);
+  document.getElementById('qEngW').textContent=`${curQW.em} ${curQW.r}`;
+  const wrong=S(ws.filter(x=>x.e!==curQW.e)).slice(0,3);
+  const opts=S([curQW,...wrong]);
+  const el=document.getElementById('qOpts');el.innerHTML='';
+  opts.forEach(w=>{const b=document.createElement('button');b.className='eopt';b.textContent=w.e;
+    b.onclick=()=>{document.querySelectorAll('.eopt').forEach(x=>x.onclick=null);
+      if(w.e===curQW.e){b.classList.add('ok');eOK('🎉 Corect!');speak(curQW.e,'en-US',.8);setTimeout(newEngQ,1700)}
+      else{b.classList.add('err');eErr(`❌ Răspuns corect: "${curQW.e}"`);setTimeout(()=>{b.classList.remove('err');b.onclick=()=>b.classList.add('err')},1200)}};
+    el.appendChild(b)});
+}
+
+// ── Sentences ──
+let sentTab = 'arrange', sentRec = null;
+
+function setSentTab(tab){
+  sentTab = tab;
+  document.getElementById('sentArrangeMode').style.display = tab==='arrange' ? '' : 'none';
+  document.getElementById('sentSpeakMode').style.display  = tab==='speak'   ? '' : 'none';
+  document.getElementById('sentTab1').className = 'mpill' + (tab==='arrange' ? ' ae' : '');
+  document.getElementById('sentTab2').className = 'mpill' + (tab==='speak'   ? ' ae' : '');
+  if(tab==='speak'){
+    resetSentSpeak();
+    // check mic availability
+    const ok = location.protocol==='https:' || location.hostname==='localhost';
+    if(!ok){
+      document.getElementById('sentMicInfo').textContent='⚠️ Microfonul necesită HTTPS. Ești pe GitHub Pages deci ar trebui să meargă!';
+    }
+    setTimeout(()=>playESent(), 600);
+  }
+}
+
+function newESent(){
+  const ss=ESENTS[CLS]||ESENTS[1]; curESent=P(ss); sentBuilt=[];
+  document.getElementById('sentRO').textContent=curESent.r;
+  renderBank(); renderBuilt();
+  document.getElementById('engFB').textContent='';
+  resetSentSpeak();
+  document.getElementById('sentCorrectHint').style.display='none';
+  document.getElementById('sentWordCheck').innerHTML='';
+  if(sentTab==='speak') setTimeout(()=>playESent(), 400);
+}
+
+function resetSentSpeak(){
+  document.getElementById('sentTranscript').textContent='—';
+  document.getElementById('sentMicScore').innerHTML='';
+  document.getElementById('sentWordCheck').innerHTML='';
+  document.getElementById('sentCorrectHint').style.display='none';
+  const btn=document.getElementById('sentMicBtn');
+  if(btn){btn.className='btn bmic';btn.textContent='🎤 Pronunță propoziția!';}
+  // reset step indicators
+  const s1=document.getElementById('step1Ind');
+  const s2=document.getElementById('step2Ind');
+  if(s1){s1.style.background='rgba(67,233,123,.15)';s1.style.borderColor='var(--eng)';s1.style.color='var(--eng)';}
+  if(s2){s2.style.background='var(--card2)';s2.style.borderColor='var(--border)';s2.style.color='var(--muted)';}
+}
+
+function renderBank(){
+  const el=document.getElementById('wordBank');el.innerHTML='';
+  S(curESent.w).forEach(w=>{const b=document.createElement('button');b.className='wb-btn';b.textContent=w;b.onclick=()=>{sentBuilt.push(w);renderBuilt()};el.appendChild(b)});
+}
+function renderBuilt(){const el=document.getElementById('builtArea');el.innerHTML='';sentBuilt.forEach((w,i)=>{const b=document.createElement('button');b.className='built-tok';b.textContent=w;b.onclick=()=>{sentBuilt.splice(i,1);renderBuilt()};el.appendChild(b)})}
+function clearBuilt(){sentBuilt=[];renderBuilt()}
+function playESent(){
+  if(curESent){
+    speak(curESent.w.join(' '),'en-US',.78);
+    // activate step 2 after playback
+    const dur = curESent.w.length * 450;
+    setTimeout(()=>{
+      const s2=document.getElementById('step2Ind');
+      if(s2){s2.style.background='rgba(167,139,250,.15)';s2.style.borderColor='var(--purple)';s2.style.color='var(--purple)';}
+    }, dur);
+  }
+}
+function chkSent(){
+  if(!sentBuilt.length){eErr('❗ Alege cuvintele!');return}
+  if(sentBuilt.join(' ')===curESent.w.join(' ')){eOK('🎉 Perfect!');speak(curESent.w.join(' '),'en-US',.78);setTimeout(newESent,2500)}
+  else eErr('❌ Ordinea nu e corectă! Mai încearcă!')
+}
+
+// ── Sentence speak (mic) ──
+function initSentRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    document.getElementById('sentMicInfo').textContent='⚠️ Browserul nu suportă recunoașterea vocii. Încearcă Chrome.';
+    document.getElementById('sentMicBtn').disabled=true;
+    return false;
+  }
+  sentRec=new SR();
+  sentRec.lang='en-US';
+  sentRec.interimResults=true;
+  sentRec.maxAlternatives=3;
+  sentRec.onresult=e=>{
+    let interim='', final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    const shown=(final||interim).trim();
+    if(shown) document.getElementById('sentTranscript').textContent='"'+shown+'"';
+    if(final){
+      const btn=document.getElementById('sentMicBtn');
+      btn.className='btn bmic'; btn.textContent='🎤 Pronunță din nou!';
+      scoreSentence(final.trim().toLowerCase());
+    }
+  };
+  sentRec.onerror=e=>{
+    const btn=document.getElementById('sentMicBtn');
+    btn.className='btn bmic'; btn.textContent='🎤 Pronunță propoziția!';
+    if(e.error==='not-allowed'){
+      document.getElementById('sentMicInfo').textContent='⚠️ Permisiunea microfonului a fost refuzată. Verifică setările browserului.';
+    } else {
+      document.getElementById('sentMicInfo').textContent='Eroare microfon: '+e.error+'. Încearcă din nou.';
+    }
+    sentRec=null;
+  };
+  sentRec.onend=()=>{
+    const btn=document.getElementById('sentMicBtn');
+    if(btn&&btn.classList.contains('listening')){
+      btn.className='btn bmic'; btn.textContent='🎤 Pronunță propoziția!';
+    }
+  };
+  return true;
+}
+
+function startSentMic(){
+  if(!sentRec && !initSentRec()) return;
+  const btn=document.getElementById('sentMicBtn');
+  btn.className='btn bmic listening'; btn.textContent='🔴 Ascult... (vorbește!)';
+  document.getElementById('sentTranscript').textContent='Vorbește acum...';
+  document.getElementById('sentMicScore').innerHTML='';
+  document.getElementById('sentWordCheck').innerHTML='';
+  document.getElementById('sentCorrectHint').style.display='none';
+  try{ sentRec.start(); }
+  catch(err){ sentRec=null; initSentRec(); setTimeout(startSentMic, 400); }
+}
+
+function scoreSentence(transcript){
+  if(!curESent) return;
+  const target = curESent.w.join(' ').toLowerCase();
+  const targetWords = curESent.w.map(w=>w.toLowerCase().replace(/[.,!?]/g,''));
+  const spokenWords  = transcript.toLowerCase().replace(/[.,!?]/g,'').split(/\s+/);
+
+  // Word-by-word highlight
+  const wc = document.getElementById('sentWordCheck');
+  wc.innerHTML='';
+  let correctCount=0;
+  targetWords.forEach((tw,i)=>{
+    const spoken = spokenWords[i]||'';
+    const sim = strSim(spoken, tw);
+    const isOk = sim>=0.7 || spoken===tw;
+    if(isOk) correctCount++;
+    const chip=document.createElement('div');
+    chip.style.cssText=`display:inline-flex;align-items:center;gap:3px;padding:5px 10px;border-radius:10px;font-family:'Fredoka',cursive;font-size:.9rem;font-weight:600;border:1.5px solid ${isOk?'var(--ok)':'var(--err)'};background:${isOk?'rgba(67,233,123,.15)':'rgba(255,107,107,.15)'};color:${isOk?'var(--ok)':'var(--err)'}`;
+    chip.innerHTML=`${tw} ${isOk?'✓':'✗'}`;
+    wc.appendChild(chip);
+  });
+
+  const pct = Math.round(correctCount/targetWords.length*100);
+  const overall = strSim(transcript, target);
+  const scoreEl = document.getElementById('sentMicScore');
+
+  if(pct>=80 || overall>=0.75){
+    scoreEl.innerHTML=`<div style="font-family:'Fredoka',cursive;font-size:1.3rem;font-weight:700;color:var(--ok)">🎉 Excelent! ${pct}% corect!</div>`;
+    eOK('🎉 Bravo! Propoziție pronunțată excelent!');
+    eDone++; updP('e', eDone);
+    setTimeout(()=>{newESent();if(sentTab==='speak')setTimeout(playESent,400)},2800);
+  } else if(pct>=50 || overall>=0.5){
+    scoreEl.innerHTML=`<div style="font-family:'Fredoka',cursive;font-size:1.2rem;font-weight:700;color:var(--gold)">👍 Bun! ${pct}% corect — mai încearcă!</div>`;
+    eErr('👍 Aproape! Mai încearcă propoziția!');
+    showCorrectHint();
+  } else {
+    scoreEl.innerHTML=`<div style="font-family:'Fredoka',cursive;font-size:1.2rem;font-weight:700;color:var(--err)">❌ ${pct}% corect — ascultă din nou!</div>`;
+    eErr('❌ Mai ascultă propoziția și încearcă!');
+    playESent();
+    showCorrectHint();
+  }
+}
+
+function showCorrectHint(){
+  if(!curESent) return;
+  document.getElementById('sentCorrectText').textContent=curESent.w.join(' ');
+  document.getElementById('sentCorrectHint').style.display='';
+}
+
+// ── Grammar handled above ──
+
+// ── Speak ──
+// ── Speak / Type detection ──
+let useMic = false;
+
+function detectMicSupport(){
+  const isHttps = location.protocol === 'https:';
+  const isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const hasSR = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  useMic = hasSR && (isHttps || isLocalhost);
+  document.getElementById('spkMicMode').style.display = useMic ? '' : 'none';
+  document.getElementById('spkTypeMode').style.display = useMic ? 'none' : '';
+  if(!useMic){
+    document.getElementById('micInfo').textContent = '💡 Pe fișiere locale microfonul e blocat de browser. Folosești modul de scriere — la fel de util!';
+  } else {
+    document.getElementById('micInfo').textContent = 'ℹ️ Acordă permisiunea pentru microfon când browserul o cere.';
+  }
+}
+
+function newSpk(){
+  const ws=getVocab();curSpkW=P(ws);
+  document.getElementById('spkEm').textContent=curSpkW.em;
+  document.getElementById('spkW').textContent=curSpkW.e;
+  document.getElementById('spkRo').textContent='('+curSpkW.r+')';
+  if(useMic){
+    document.getElementById('micSaid').textContent='—';
+    document.getElementById('micVerdict').textContent='';
+    const btn=document.getElementById('micBtn');btn.className='btn bmic';btn.textContent='🎤 Pronunță!';
+  } else {
+    const inp=document.getElementById('typeInp');inp.value='';inp.style.borderColor='';
+    document.getElementById('typeVerdict').textContent='';
+    setTimeout(()=>inp.focus(), 100);
+  }
+  // auto-play word after short delay
+  setTimeout(()=>playSpk(), 600);
+}
+function playSpk(){if(curSpkW)speak(curSpkW.e,'en-US',.72)}
+
+// Type fallback
+function chkType(){
+  const val = document.getElementById('typeInp').value.trim().toLowerCase();
+  if(!val) return;
+  const target = curSpkW.e.toLowerCase();
+  const sc = strSim(val, target);
+  const inp = document.getElementById('typeInp');
+  const vEl = document.getElementById('typeVerdict');
+  if(val === target){
+    inp.style.borderColor = 'var(--ok)';
+    vEl.textContent = '🎉 Perfect! Ai scris corect "'+curSpkW.e+'"!';
+    vEl.className = 'mic-verdict mv-good';
+    eOK('🎉 Corect! "'+curSpkW.e+'" = '+curSpkW.r);
+    setTimeout(newSpk, 2000);
+  } else if(sc >= 0.6){
+    inp.style.borderColor = 'var(--gold)';
+    vEl.textContent = '👍 Aproape! Ai scris "'+val+'" dar corect e "'+curSpkW.e+'"';
+    vEl.className = 'mic-verdict mv-fair';
+    eErr('👍 Aproape corect!');
+  } else {
+    inp.style.borderColor = 'var(--err)';
+    vEl.textContent = '❌ Greșit. Cuvântul corect e "'+curSpkW.e+'". Ascultă din nou!';
+    vEl.className = 'mic-verdict mv-bad';
+    eErr('❌ Greșit — cuvântul e "'+curSpkW.e+'"');
+    playSpk();
+  }
+}
+
+// Mic mode (HTTPS)
+function initRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR) return false;
+  recognition=new SR();recognition.lang='en-US';recognition.interimResults=false;recognition.maxAlternatives=5;
+  recognition.onresult=e=>{
+    const tr=e.results[0][0].transcript.toLowerCase().trim();
+    const btn=document.getElementById('micBtn');btn.className='btn bmic';btn.textContent='🎤 Pronunță!';
+    document.getElementById('micSaid').textContent='"'+tr+'"';
+    const sc=strSim(tr,curSpkW.e.toLowerCase());
+    const vEl=document.getElementById('micVerdict');
+    if(sc>=.75||tr.includes(curSpkW.e.toLowerCase())||curSpkW.e.toLowerCase().includes(tr)){
+      vEl.textContent='🎉 Pronunție excelentă!';vEl.className='mic-verdict mv-good';
+      eOK('🎉 Bravo! Ai pronunțat "'+curSpkW.e+'" corect!');setTimeout(newSpk,2500);
+    } else if(sc>=.45){vEl.textContent='👍 Aproape! Mai încearcă!';vEl.className='mic-verdict mv-fair';eErr('👍 Aproape! Ascultă din nou!')}
+    else{vEl.textContent='❌ Încearcă din nou!';vEl.className='mic-verdict mv-bad';eErr('❌ Mai ascultă pronunția și încearcă!')}
+  };
+  recognition.onerror=e=>{
+    const btn=document.getElementById('micBtn');btn.className='btn bmic';btn.textContent='🎤 Pronunță!';
+    if(e.error==='not-allowed'){
+      // Switch to type mode if permission denied
+      useMic=false;
+      document.getElementById('spkMicMode').style.display='none';
+      document.getElementById('spkTypeMode').style.display='';
+      document.getElementById('micInfo').textContent='⚠️ Permisiunea microfonului a fost refuzată. S-a activat modul de scriere.';
+    }
+    recognition=null;
+  };
+  recognition.onend=()=>{const b=document.getElementById('micBtn');if(b.classList.contains('listening')){b.className='btn bmic';b.textContent='🎤 Pronunță!'}};
+  return true;
+}
+function startMic(){
+  if(!recognition&&!initRec())return;
+  const btn=document.getElementById('micBtn');btn.className='btn bmic listening';btn.textContent='🔴 Ascult...';
+  document.getElementById('micSaid').textContent='Vorbește acum...';
+  try{recognition.start()}catch(err){recognition=null;initRec();setTimeout(startMic,400)}
+}
+function strSim(a,b){if(a===b)return 1;if(!a||!b)return 0;const la=a.length,lb=b.length;const dp=Array.from({length:la+1},(_,i)=>Array.from({length:lb+1},(_,j)=>i===0?j:j===0?i:0));for(let i=1;i<=la;i++)for(let j=1;j<=lb;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);return 1-dp[la][lb]/Math.max(la,lb)}
+
+/* ══ INIT ══ */
+setClass(1);
+detectMicSupport();
+</script>
+</body>
+</html>
